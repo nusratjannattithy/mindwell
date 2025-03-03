@@ -1,5 +1,6 @@
 # mindwell
 MindWell: A Online Mental Health Management Platform
+<br>
 Mental health issues are a global concern, but existing platforms lack efficient booking systems, mood tracking, and mood-enhancing features. This project develops an integrated website to address these gaps.
 
  Objectives
@@ -9,14 +10,14 @@ Mental health issues are a global concern, but existing platforms lack efficient
 - Mood-enhancing segments (music, videos, games).
 - Secure authentication and role-based access.
 
-Technology Stack
-Frontend:  React JS, Tailwind CSS,
-Backend: Express JS, Node JS
+Technology Stack<br>
+Frontend:  React JS, Tailwind CSS,<br>
+Backend: Express JS, Node JS<br>
 Database: MongoDB
 
 Core Features
-User: Registration, appointment booking, mood tracking, self-assessment, mood enhancer, crisis helpline.
-Therapist: Authentication, profile management, appointment scheduling, patient history view.
+User: Registration, appointment booking, mood tracking, self-assessment, mood enhancer, crisis helpline.<br>
+Therapist: Authentication, profile management, appointment scheduling, patient history view.<br>
 Admin: User/therapist management, content management, feedback moderation.
 
  Innovative Aspects
