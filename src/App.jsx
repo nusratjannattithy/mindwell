@@ -9,6 +9,8 @@ import Footer from './Components/Footer';
 import LogIn from './Components/LogIn';
 import SelfTest from './Components/SelfTest';
 import Registration from './Components/Registration';
+import Helpline from './Components/Helpline'; 
+
 
 function App() {
   return (
@@ -26,6 +28,7 @@ function App() {
         <Route path="/Registration" element={<Registration/>} />
         <Route path="/assessment" element={<SelfTest />} />
         <Route path="/options" element={<OptionsPage />} />
+        <Route path="/Helpline" element={<Helpline />} />
       </Routes>
 
       {/* Footer is displayed on all pages */}

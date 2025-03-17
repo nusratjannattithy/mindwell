@@ -80,7 +80,7 @@ const LogIn = () => {
         </div>
       </div>
       
-      <Footer />
+   
     </>
   );
 };
