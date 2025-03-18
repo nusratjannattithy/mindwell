@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React from 'react';
 import { Link } from 'react-router-dom';
 import HeroImage from '../assets/Hero.png'; 
@@ -22,7 +21,7 @@ const Hero = () => {
           <p className="text-lg mb-6">
             Your mental health matters. Get insights and guidance to improve your well-being.
           </p>
-          <Link to="/assessment">
+          <Link to="/self-assessment">
             <button className="bg-blue-500 text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition flex items-center gap-2">
               Check Your Mental Health Now <FaArrowCircleRight />
             </button>

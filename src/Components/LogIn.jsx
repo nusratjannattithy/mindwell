@@ -1,9 +1,11 @@
-/* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { useState } from 'react'; 
 import { Link } from 'react-router-dom';
 import Footer from './Footer';
 
+
+
 const LogIn = () => {
+  const auth = getAuth(app);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -11,18 +13,26 @@ const LogIn = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
+    
     if (!emailRegex.test(email)) {
       setError('Please enter a valid email address.');
     } else {
       setError('');
-      console.log('Login attempted with:', { email, password });
-      // Placeholder for authentication logic (to be implemented later)
+      // Authentication logic
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          console.log('Logged in:', userCredential.user);
+        })
+        .catch((error) => {
+          setError('Invalid email or password. Please try again.');
+        });
     }
   };
 
   return (
     <>
+      <PageHeadings pagename={"My Account"} />   
+
       <div className="flex items-center justify-center min-h-screen bg-blue-100">
         <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-xl border-t-4 border-blue-400">
           <h2 className="text-3xl font-bold text-center text-blue-700">Welcome Back</h2>
@@ -72,8 +82,8 @@ const LogIn = () => {
 
           <div className="text-center mt-4">
             <p className="text-sm text-gray-600">
-               Don't have an Account? 
-              <Link to="/Registration" className="ml-1 text-blue-500 hover:text-blue-600 font-semibold transition">
+              Don't have an Account? 
+              <Link to="/CreateAccount" className="ml-1 text-blue-500 hover:text-blue-600 font-semibold transition">
                 Create account
               </Link>
             </p>
@@ -81,7 +91,8 @@ const LogIn = () => {
         </div>
       </div>
       
-   
+      <Logos />
+      <Footer />
     </>
   );
 };

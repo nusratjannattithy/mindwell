@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import Logo from "../assets/MindLogo.jpg";
 import { Link } from "react-router-dom";
@@ -39,8 +38,9 @@ const Navbar = () => {
                 </Link>
               </li>
               <li>
-              <Link to="/book-appointment" className="hover:text-fuchsia-400 transition font-bold">
-                 Book Appointment</Link>
+                <Link to="/appointment" className="hover:text-fuchsia-400 transition font-bold">
+                  Book Appointment
+                </Link>
               </li>
               <li>
                 <Link to="/resources" className="hover:text-fuchsia-400 transition font-bold">
@@ -48,13 +48,8 @@ const Navbar = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/MoodTracking" className="hover:text-fuchsia-400 transition font-bold">
-                  Mood Tracking
-                </Link>
-              </li>
-              <li>
-                <Link to="/MoodEnhancement" className="hover:text-fuchsia-400 transition font-bold">
-                  Mood Enhancement
+                <Link to="/shop" className="hover:text-fuchsia-400 transition font-bold">
+                  Mood Enhancer
                 </Link>
               </li>
               <li>
@@ -62,13 +57,6 @@ const Navbar = () => {
                   Feedback/Review
                 </Link>
               </li>
-              <li>
-                <Link to="/Helpline" className="hover:text-fuchsia-400 transition font-bold">
-                  Helpline
-                </Link>
-
-              </li>
-              
             </ul>
           </div>
 
@@ -105,34 +93,25 @@ const Navbar = () => {
               </Link>
             </li>
             <li>
-              <Link to="/book-appointment" className="hover:text-fuchsia-400 transition font-bold">
-                 Book Appointment</Link>
-              </li>
+              <Link to="/appointment" className="block text-amber-100 font-bold hover:text-fuchsia-400 transition">
+                Book Appointment
+              </Link>
+            </li>
             <li>
               <Link to="/resources" className="block text-amber-100 font-bold hover:text-fuchsia-400 transition">
                 Resources
               </Link>
             </li>
             <li>
-                <Link to="/MoodTracking" className="hover:text-fuchsia-400 transition font-bold">
-                  Mood Tracking
-                </Link>
-              </li>
-            <li>
-            <Link to="/MoodEnhancement" className="block text-amber-100 font-bold hover:text-fuchsia-400 transition">
-                  Mood Enhancement
-            </Link>
+              <Link to="/shop" className="block text-amber-100 font-bold hover:text-fuchsia-400 transition">
+                Mood Enhancer
+              </Link>
             </li>
             <li>
               <Link to="/contact" className="block text-amber-100 font-bold hover:text-fuchsia-400 transition">
                 Feedback/Review
               </Link>
             </li>
-             <li>
-              <Link to="/Helpline" className="block text-amber-100 font-bold hover:text-fuchsia-400 transition">
-                Helpline
-              </Link>
-              </li>
           </ul>
         </div>
       </div>
