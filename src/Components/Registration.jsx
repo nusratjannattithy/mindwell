@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Heading from './Heading';
+import axios from "axios";
 
 
 const Registration = () => {
@@ -40,20 +41,33 @@ const Registration = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
+  
     if (!emailRegex.test(formData.email)) {
-      setError('Please enter a valid email address.');
+      setError("Please enter a valid email address.");
     } else if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match.');
+      setError("Passwords do not match.");
     } else {
-      setError('');
-      console.log('Registering:', { userType, ...formData });
+      setError("");
+      try {
+        // Send data to backend
+        const response = await axios.post("http://localhost:5000/api/register", {
+          userType,
+          ...formData,
+        });
+  
+        console.log("Registration successful:", response.data);
+        alert("Registration successful!"); // Show success message
+      } catch (error) {
+        console.error("Registration failed:", error);
+        setError("Registration failed. Please try again.");
+      }
     }
   };
-
+  
   // Patient Fields 
   const renderPatientFields = () => (
     <>
