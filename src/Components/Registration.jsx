@@ -1,21 +1,20 @@
-import React, { useState } from 'react';
-import Heading from './Heading';
+import React, { useState } from "react";
+import Heading from "./Heading";
 import axios from "axios";
 
-
 const Registration = () => {
-  const [userType, setUserType] = useState('');
+  const [userType, setUserType] = useState("");
   const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    phone: '',
-    gender: '',
-    birthdate: '',
-    specialization: '',
-    licenseNumber: '',
-    experience: '',
+    fullName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    phone: "",
+    gender: "",
+    birthdate: "",
+    specialization: "",
+    licenseNumber: "",
+    experience: "",
     documents: {
       educationalCertificates: null,
       resume: null,
@@ -26,7 +25,7 @@ const Registration = () => {
     },
   });
 
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -41,39 +40,31 @@ const Registration = () => {
     });
   };
 
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  
+
     if (!emailRegex.test(formData.email)) {
       setError("Please enter a valid email address.");
     } else if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match.");
     } else {
       setError("");
-      try {
-        // Send data to backend
-        const response = await axios.post("http://localhost:5000/api/register", {
-          userType,
-          ...formData,
-        });
-  
-        console.log("Registration successful:", response.data);
-        alert("Registration successful!"); // Show success message
-      } catch (error) {
-        console.error("Registration failed:", error);
-        setError("Registration failed. Please try again.");
-      }
+      console.log("Registering:", { userType, ...formData });
+      axios
+        .post("mongodb://localhost:27017/registered", { userType, ...formData })
+        .then((result) => console.log("Registering:", result.data))
+        .catch((err) => console.log("Error:", err));
     }
   };
-  
-  // Patient Fields 
+
+  // Patient Fields
   const renderPatientFields = () => (
     <>
-   
       <div>
-        <label className="block text-sm font-semibold text-gray-700">Phone Number</label>
+        <label className="block text-sm font-semibold text-gray-700">
+          Phone Number
+        </label>
         <input
           type="text"
           name="phone"
@@ -85,7 +76,9 @@ const Registration = () => {
       </div>
 
       <div>
-        <label className="block text-sm font-semibold text-gray-700">Gender</label>
+        <label className="block text-sm font-semibold text-gray-700">
+          Gender
+        </label>
         <select
           name="gender"
           value={formData.gender}
@@ -101,7 +94,9 @@ const Registration = () => {
       </div>
 
       <div className="col-span-2">
-        <label className="block text-sm font-semibold text-gray-700">Date of Birth</label>
+        <label className="block text-sm font-semibold text-gray-700">
+          Date of Birth
+        </label>
         <input
           type="date"
           name="birthdate"
@@ -118,7 +113,9 @@ const Registration = () => {
   const renderPsychologistFields = () => (
     <>
       <div>
-        <label className="block text-sm font-semibold text-gray-700">Specialization</label>
+        <label className="block text-sm font-semibold text-gray-700">
+          Specialization
+        </label>
         <input
           type="text"
           name="specialization"
@@ -130,7 +127,9 @@ const Registration = () => {
       </div>
 
       <div>
-        <label className="block text-sm font-semibold text-gray-700">License Number</label>
+        <label className="block text-sm font-semibold text-gray-700">
+          License Number
+        </label>
         <input
           type="text"
           name="licenseNumber"
@@ -142,7 +141,9 @@ const Registration = () => {
       </div>
 
       <div>
-        <label className="block text-sm font-semibold text-gray-700">Experience (Years)</label>
+        <label className="block text-sm font-semibold text-gray-700">
+          Experience (Years)
+        </label>
         <input
           type="number"
           name="experience"
@@ -155,15 +156,20 @@ const Registration = () => {
 
       {/* Document Upload Fields */}
       {[
-        { label: 'Educational Certificates', name: 'educationalCertificates' },
-        { label: 'Professional Resume / CV', name: 'resume' },
-        { label: 'Government-issued ID', name: 'governmentID' },
-        { label: 'Consent to Platform Policies', name: 'consentForm' },
-        { label: 'Specialization Certificates', name: 'specializationCertificates' },
-        { label: 'Profile Photo', name: 'profilePhoto' },
+        { label: "Educational Certificates", name: "educationalCertificates" },
+        { label: "Professional Resume / CV", name: "resume" },
+        { label: "Government-issued ID", name: "governmentID" },
+        { label: "Consent to Platform Policies", name: "consentForm" },
+        {
+          label: "Specialization Certificates",
+          name: "specializationCertificates",
+        },
+        { label: "Profile Photo", name: "profilePhoto" },
       ].map((doc) => (
         <div key={doc.name} className="col-span-2">
-          <label className="block text-sm font-semibold text-gray-700">{doc.label}</label>
+          <label className="block text-sm font-semibold text-gray-700">
+            {doc.label}
+          </label>
           <input
             type="file"
             name={doc.name}
@@ -178,97 +184,122 @@ const Registration = () => {
 
   return (
     <>
-     <Heading Headline={"Let's Start Your Mental Health Journey with MindWell"} pagename={"Registration"}/>
-     <div className="flex flex-col min-h-screen">
-      <div className="flex-1 flex items-center justify-center bg-blue-100">
-        {!userType ? (
-          <div className="bg-white p-10 rounded-lg shadow-xl text-center max-w-md w-full">
-            <h2 className="text-3xl font-bold text-blue-700">Register as</h2>
-            <p className="text-gray-600 mt-2 mb-6">Please select your role to continue</p>
-            <div className="flex gap-4 justify-center">
-              <button
-                onClick={() => setUserType('patient')}
-                className="w-1/2 py-3 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition"
-              >
-                Patient
-              </button>
-              <button
-                onClick={() => setUserType('psychologist')}
-                className="w-1/2 py-3 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition"
-              >
-                Psychologist
-              </button>
+      <Heading
+        Headline={"Let's Start Your Mental Health Journey with MindWell"}
+        pagename={"Registration"}
+      />
+      <div className="flex flex-col min-h-screen">
+        <div className="flex-1 flex items-center justify-center bg-blue-100">
+          {!userType ? (
+            <div className="bg-white p-10 rounded-lg shadow-xl text-center max-w-md w-full">
+              <h2 className="text-3xl font-bold text-blue-700">Register as</h2>
+              <p className="text-gray-600 mt-2 mb-6">
+                Please select your role to continue
+              </p>
+              <div className="flex gap-4 justify-center">
+                <button
+                  onClick={() => setUserType("patient")}
+                  className="w-1/2 py-3 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition"
+                >
+                  Patient
+                </button>
+                <button
+                  onClick={() => setUserType("psychologist")}
+                  className="w-1/2 py-3 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition"
+                >
+                  Psychologist
+                </button>
+              </div>
             </div>
-          </div>
-        ) : (
-          <div className="w-full max-w-5xl p-8 bg-white shadow-2xl rounded-lg">
-            <h2 className="text-4xl font-bold text-blue-700 text-center mb-6">
-              {userType === 'patient' ? 'Patient Registration' : 'Psychologist Registration'}
-            </h2>
-            {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+          ) : (
+            <div className="w-full max-w-5xl p-8 bg-white shadow-2xl rounded-lg">
+              <h2 className="text-4xl font-bold text-blue-700 text-center mb-6">
+                {userType === "patient"
+                  ? "Patient Registration"
+                  : "Psychologist Registration"}
+              </h2>
+              {error && (
+                <p className="text-red-500 text-center mb-4">{error}</p>
+              )}
 
-            <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Common Fields */}
-              <div>
-                <label className="block text-sm font-semibold text-gray-700">Full Name</label>
-                <input
-                  type="text"
-                  name="fullName"
-                  value={formData.fullName}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full mt-1 p-3 border border-gray-300 rounded-lg"
-                />
-              </div>
+              <form
+                onSubmit={handleSubmit}
+                className="grid grid-cols-1 md:grid-cols-2 gap-6"
+              >
+                {/* Common Fields */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Full Name
+                  </label>
+                  <input
+                    type="text"
+                    name="fullName"
+                    value={formData.fullName}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full mt-1 p-3 border border-gray-300 rounded-lg"
+                  />
+                </div>
 
-              <div>
-                <label className="block text-sm font-semibold text-gray-700">Email</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full mt-1 p-3 border border-gray-300 rounded-lg"
-                />
-              </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full mt-1 p-3 border border-gray-300 rounded-lg"
+                  />
+                </div>
 
-              <div>
-                <label className="block text-sm font-semibold text-gray-700">Password</label>
-                <input
-                  type="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full mt-1 p-3 border border-gray-300 rounded-lg"
-                />
-              </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Password
+                  </label>
+                  <input
+                    type="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full mt-1 p-3 border border-gray-300 rounded-lg"
+                  />
+                </div>
 
-              <div>
-                <label className="block text-sm font-semibold text-gray-700">Confirm Password</label>
-                <input
-                  type="password"
-                  name="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full mt-1 p-3 border border-gray-300 rounded-lg"
-                />
-              </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Confirm Password
+                  </label>
+                  <input
+                    type="password"
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full mt-1 p-3 border border-gray-300 rounded-lg"
+                  />
+                </div>
 
-              {userType === 'patient' ? renderPatientFields() : renderPsychologistFields()}
+                {userType === "patient"
+                  ? renderPatientFields()
+                  : renderPsychologistFields()}
 
-              <div className="col-span-2 text-center">
-                <button type="submit" className="py-3 px-8 bg-blue-500 text-white rounded-lg">Create Account</button>
-              </div>
-            </form>
-          </div>
-        )}
+                <div className="col-span-2 text-center">
+                  <button
+                    type="submit"
+                    className="py-3 px-8 bg-blue-500 text-white rounded-lg"
+                  >
+                    Create Account
+                  </button>
+                </div>
+              </form>
+            </div>
+          )}
+        </div>
       </div>
-    
-    </div>
-  
     </>
   );
 };
