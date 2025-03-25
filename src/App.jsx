@@ -10,13 +10,18 @@ import LogIn from './Components/LogIn';
 import SelfTest from './Components/SelfTest';
 import BookAppointment from "./Components/BookAppointment"; 
 import Registration from './Components/Registration';
+
+import Helpline from './Components/Helpline'; 
+import Feedback from './Components/Feedback'; 
+
+
+
 import MoodEnhancement from './Components/MoodEnhancement';
 import MoodTracking from './Components/MoodTracking';
-import Helpline from './Components/Helpline'; 
 import Blog from './Components/Blog';
 import Articles from './Components/Articles';
 import Books from './Components/Books';
-import Feedback from './Components/Feedback';
+
 
 function App() {
   return (
@@ -34,15 +39,22 @@ function App() {
         <Route path="/Registration" element={<Registration/>} />
         <Route path="/assessment" element={<SelfTest />} />
         <Route path="/options" element={<OptionsPage />} />
+
+        <Route path="/Helpline" element={<Helpline />} />
+        <Route path="/Feedback" element={<Feedback />} />
+
+
+
         <Route path="/book-appointment" element={<BookAppointment />} />
         <Route path="/MoodTracking" element={<MoodTracking/>} />
         <Route path="/MoodEnhancement" element={<MoodEnhancement/>} />
-        <Route path="/Helpline" element={<Helpline />} />
+       
         <Route path="/Blog" element={<Blog />} />
         <Route path="/Articles" element={<Articles />} />
         <Route path="/Books" element={<Books />} />
-        <Route path="/Feedback" element={<Feedback />} />
+     
         
+
       </Routes>
 
       {/* Footer is displayed on all pages */}
