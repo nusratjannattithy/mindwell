@@ -8,10 +8,19 @@ import Resources from './Components/Resources';
 import Footer from './Components/Footer';
 import LogIn from './Components/LogIn';
 import SelfTest from './Components/SelfTest';
+import BookAppointment from "./Components/BookAppointment"; 
 import Registration from './Components/Registration';
+
 import Helpline from './Components/Helpline'; 
 import Feedback from './Components/Feedback'; 
 
+
+
+import MoodEnhancement from './Components/MoodEnhancement';
+import MoodTracking from './Components/MoodTracking';
+import Blog from './Components/Blog';
+import Articles from './Components/Articles';
+import Books from './Components/Books';
 
 
 function App() {
@@ -30,9 +39,21 @@ function App() {
         <Route path="/Registration" element={<Registration/>} />
         <Route path="/assessment" element={<SelfTest />} />
         <Route path="/options" element={<OptionsPage />} />
+
         <Route path="/Helpline" element={<Helpline />} />
         <Route path="/Feedback" element={<Feedback />} />
 
+
+
+        <Route path="/book-appointment" element={<BookAppointment />} />
+        <Route path="/MoodTracking" element={<MoodTracking/>} />
+        <Route path="/MoodEnhancement" element={<MoodEnhancement/>} />
+       
+        <Route path="/Blog" element={<Blog />} />
+        <Route path="/Articles" element={<Articles />} />
+        <Route path="/Books" element={<Books />} />
+     
+        
 
       </Routes>
 
