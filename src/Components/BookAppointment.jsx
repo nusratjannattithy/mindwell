@@ -1,3 +1,4 @@
+
 import { useState } from "react"; // Import useState for handling component state
 import { useNavigate } from "react-router-dom"; // Import useNavigate to handle page navigation
 
@@ -95,7 +96,9 @@ const BookAppointment = () => {
         Our Consultants
       </h2>
       <p className="text-center text-gray-500 mb-4">
+
         Click a consultant's photo to proceed to login.
+
       </p>
 
       <input

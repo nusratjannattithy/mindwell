@@ -57,18 +57,22 @@ const Navbar = () => {
                   Mood Enhancement
                 </Link>
               </li>
-              <li>
-                <Link to="/contact" className="hover:text-fuchsia-400 transition font-bold">
+             
+                <li>
+                <Link to="/Feedback" className="hover:text-fuchsia-400 transition font-bold">
+
                   Feedback/Review
                 </Link>
               </li>
               <li>
                 <Link to="/Helpline" className="hover:text-fuchsia-400 transition font-bold">
+
                   Helpline
                 </Link>
 
               </li>
               
+
             </ul>
           </div>
 
@@ -127,17 +131,29 @@ const Navbar = () => {
               <Link to="/contact" className="block text-amber-100 font-bold hover:text-fuchsia-400 transition">
                 Feedback/Review
               </Link>
-            </li>
+              </li>
+              <li>
+              <Link to="/Feedback" className="block text-amber-100 font-bold hover:text-fuchsia-400 transition">
+                Feedback/Review
+              </Link>
+              </li>
+            <li>
+              <Link to="/Helpline" className="block text-amber-100 font-bold hover:text-fuchsia-400 transition">
+                Helpline
+              </Link>
+              </li>
              <li>
               <Link to="/Helpline" className="block text-amber-100 font-bold hover:text-fuchsia-400 transition">
                 Helpline
               </Link>
               </li>
+
             <li>
               <Link to="/about" className="hover:text-fuchsia-400 transition font-bold">
     About Us
     </Link>
     </li>
+
           </ul>
         </div>
       </div>

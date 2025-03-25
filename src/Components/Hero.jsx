@@ -8,7 +8,9 @@ const Hero = () => {
   return (
     <div
       className="relative bg-cover bg-center h-[700px] md:h-[800px] flex items-center"
+
       style= {{ backgroundImage: `url(${HeroImage})` }}
+
     >
       {/* Overlay to make text readable */}
       <div className="absolute inset-0 bg-black bg-opacity-50"></div>
