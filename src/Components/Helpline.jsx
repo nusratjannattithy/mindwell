@@ -1,6 +1,7 @@
 
 /* eslint-disable no-unused-vars */
 
+
 import React from "react";
 
 const Helpline = () => {
@@ -87,7 +88,6 @@ const Helpline = () => {
              {/* Encouraging Message */}
       <div className="mt-10 text-center max-w-xl">
         <p className="text-xl font-semibold text-gray-700">
-
 
           Remember, you do not have to face it alone. We are just one call away.
 

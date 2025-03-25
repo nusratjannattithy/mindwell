@@ -11,8 +11,10 @@ import SelfTest from './Components/SelfTest';
 import BookAppointment from "./Components/BookAppointment"; 
 import Registration from './Components/Registration';
 
+
 import Helpline from './Components/Helpline'; 
-import Feedback from './Components/Feedback'; 
+import Feedback from './Components/Feedback';
+import AboutUs from './Components/AboutUs';  // Import AboutUs Component 
 
 
 
@@ -21,6 +23,7 @@ import MoodTracking from './Components/MoodTracking';
 import Blog from './Components/Blog';
 import Articles from './Components/Articles';
 import Books from './Components/Books';
+
 
 
 function App() {
@@ -40,8 +43,10 @@ function App() {
         <Route path="/assessment" element={<SelfTest />} />
         <Route path="/options" element={<OptionsPage />} />
 
+
         <Route path="/Helpline" element={<Helpline />} />
         <Route path="/Feedback" element={<Feedback />} />
+        <Route path="/about" element={<AboutUs />} /> {/* New About Us Page */}
 
 
 
