@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // MongoDB Connection (Connected to "Mindwell" database)
-mongoose.connect("mongodb://localhost:27017/user").then(() => console.log('MongoDB Connected to "Mindwell" database'))
+mongoose.connect("mongodb://127.0.0.1:27017/Mindwell").then(() => console.log('MongoDB Connected to "Mindwell" database'))
   .catch(err => console.error('MongoDB Connection Error:', err));
 
 // Multer Storage (for file uploads)

@@ -52,7 +52,7 @@ const Registration = () => {
       setError("");
       console.log("Registering:", { userType, ...formData });
       axios
-        .post("mongodb://localhost:27017/registered", { userType, ...formData })
+        .post("http://localhost:5000/register", { userType, ...formData })
         .then((result) => console.log("Registering:", result.data))
         .catch((err) => console.log("Error:", err));
     }
