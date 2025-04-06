@@ -51,8 +51,31 @@ const Registration = () => {
     } else {
       setError("");
       console.log("Registering:", { userType, ...formData });
+      const formPayload = new FormData();
+
+      // Append simple fields
+      formPayload.append("fullName", formData.fullName);
+      formPayload.append("email", formData.email);
+      formPayload.append("password", formData.password);
+      formPayload.append("phone", formData.phone);
+      formPayload.append("userType", userType); // from state
+      formPayload.append("gender", formData.gender);
+      formPayload.append("birthdate", formData.birthdate);
+      formPayload.append("specialization", formData.specialization);
+      formPayload.append("licenseNumber", formData.licenseNumber);
+      formPayload.append("experience", formData.experience);
+      
+      // Append files
+      Object.entries(formData.documents).forEach(([key, file]) => {
+        if (file) {
+          formPayload.append(key, file);
+        }
+      });
+      
       axios
-        .post("http://localhost:5000/register", { userType, ...formData })
+        .post("http://localhost:5000/registered", formPayload, {
+          headers: { "Content-Type": "multipart/form-data" },
+        })
         .then((result) => console.log("Registering:", result.data))
         .catch((err) => console.log("Error:", err));
     }
