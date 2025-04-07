@@ -96,7 +96,9 @@ const BookAppointment = () => {
         Our Consultants
       </h2>
       <p className="text-center text-gray-500 mb-4">
-        Click a consultants photo to proceed to login.
+
+        Click a consultant's photo to proceed to login.
+
       </p>
 
       <input
