@@ -38,6 +38,7 @@ const Footer = () => {
               <li><Link to="/about" className="hover:text-fuchsia-400 transition font-bold">About Us</Link></li>
 
 
+
             </ul>
           </div>
 
