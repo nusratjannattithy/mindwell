@@ -9,9 +9,9 @@ import LogIn from './Components/LogIn';
 import SelfTest from './Components/SelfTest';
 import BookAppointment from "./Components/BookAppointment"; 
 import Registration from './Components/Registration';
-
-
+import ConsultantProfile from './Components/ConsultantProfile'; 
 import Helpline from './Components/Helpline'; 
+
 import Feedback from './Components/Feedback';
 import AboutUs from './Components/AboutUs';  // Import AboutUs Component 
 
@@ -58,10 +58,15 @@ function App() {
         <Route path="/Articles" element={<Articles />} />
         <Route path="/Books" element={<Books />} />
 
+        <Route path="/consultant/:id" element={<ConsultantProfile />} />
+
+     
+
        
         <Route path="/" element={<Home />} />
        
        
+
 
 
       </Routes>
