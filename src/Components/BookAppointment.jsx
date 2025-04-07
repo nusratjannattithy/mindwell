@@ -80,9 +80,11 @@ const BookAppointment = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
 
-  const handleTherapistClick = () => {
-    navigate("/LogIn");
+
+  const handleTherapistClick = (id) => {
+    navigate(`/consultant/${id}`);
   };
+  
 
   const filteredTherapists = therapists.filter(
     (t) =>
@@ -115,7 +117,8 @@ const BookAppointment = () => {
             <div
               key={t._id}
               className="p-4 border rounded-lg shadow-md cursor-pointer hover:bg-gray-100 flex flex-col items-center space-y-4"
-              onClick={handleTherapistClick}
+              onClick={() => handleTherapistClick(t._id)}
+
             >
               <img
                 src={t.image}
