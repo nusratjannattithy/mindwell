@@ -68,10 +68,13 @@ const Navbar = () => {
               </li>
               <li>
                 <Link to="/Helpline" className="hover:text-fuchsia-400 transition font-bold">
-
                   Helpline
                 </Link>
-
+              </li>
+              <li>
+                <Link to="/dashboard" className="hover:text-fuchsia-400 transition font-bold">
+                  Dashboard
+                </Link>
               </li>
               
 
@@ -134,11 +137,16 @@ const Navbar = () => {
               <Link to="/Feedback" className="block text-amber-100 font-bold hover:text-fuchsia-400 transition">
                 Feedback/Review
               </Link>
-         
+              </li>
              <li>
               <Link to="/Helpline" className="block text-amber-100 font-bold hover:text-fuchsia-400 transition">
                 Helpline
               </Link>
+              </li>
+              <li>
+                <Link to="/dashboard" className="block text-amber-100 font-bold hover:text-fuchsia-400 transition">
+                  Dashboard
+                </Link>
               </li>
 
             <li>

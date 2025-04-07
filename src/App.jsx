@@ -23,7 +23,7 @@ import MoodTracking from './Components/MoodTracking';
 import Blog from './Components/Blog';
 import Articles from './Components/Articles';
 import Books from './Components/Books';
-
+import PatientDashboard from './Components/PatientDashboard';
 
 
 function App() {
@@ -57,6 +57,8 @@ function App() {
         <Route path="/Blog" element={<Blog />} />
         <Route path="/Articles" element={<Articles />} />
         <Route path="/Books" element={<Books />} />
+        <Route path="/dashboard" element={<PatientDashboard />} />
+        
      
         
 
