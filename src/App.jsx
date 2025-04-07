@@ -3,7 +3,6 @@ import { Routes, Route } from 'react-router-dom';
 import Header from './Components/Header';
 import OptionsPage from './Components/OptionsPage';
 import Navbar from './Components/Navbar';
-import Hero from './Components/Hero';
 import Resources from './Components/Resources';
 import Footer from './Components/Footer';
 import LogIn from './Components/LogIn';
@@ -24,6 +23,7 @@ import Blog from './Components/Blog';
 import Articles from './Components/Articles';
 import Books from './Components/Books';
 
+import Home from './Pages/Home';
 
 
 function App() {
@@ -36,7 +36,7 @@ function App() {
       {/* Define Routes for Navigation */}
       <Routes>
         {/* Define different routes for different components */}
-        <Route path="/" element={<Hero />} /> {/* Display Hero on home page */}
+       
         <Route path="/resources" element={<Resources />} />
         <Route path="/LogIn" element={<LogIn />} />
         <Route path="/Registration" element={<Registration/>} />
@@ -57,8 +57,12 @@ function App() {
         <Route path="/Blog" element={<Blog />} />
         <Route path="/Articles" element={<Articles />} />
         <Route path="/Books" element={<Books />} />
-     
-        
+
+       
+        <Route path="/" element={<Home />} />
+       
+       
+
 
       </Routes>
 
