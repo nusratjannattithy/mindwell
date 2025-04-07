@@ -12,9 +12,13 @@ import Registration from './Components/Registration';
 import MoodEnhancement from './Components/MoodEnhancement';
 import MoodTracking from './Components/MoodTracking';
 import Helpline from './Components/Helpline'; 
-import AboutUs from './Components/AboutUs';  
+import Blog from './Components/Blog';
+import Articles from './Components/Articles';
+import Books from './Components/Books';
+import Feedback from './Components/Feedback';
 import Home from './Pages/Home';
-
+import AboutUs from './Components/AboutUs.jsx';
+import Admin from './Pages/Admin';
 function App() {
   return (
     <>
@@ -25,9 +29,8 @@ function App() {
       {/* Define Routes for Navigation */}
       <Routes>
         {/* Define different routes for different components */}
-        <Route path="/" element={<Home />} /> 
-        
-        <Route path="/resources" element={<Resources/>} />
+       
+        <Route path="/resources" element={<Resources />} />
         <Route path="/LogIn" element={<LogIn />} />
         <Route path="/Registration" element={<Registration/>} />
         <Route path="/assessment" element={<SelfTest />} />
@@ -36,11 +39,20 @@ function App() {
         <Route path="/MoodTracking" element={<MoodTracking/>} />
         <Route path="/MoodEnhancement" element={<MoodEnhancement/>} />
         <Route path="/Helpline" element={<Helpline />} />
-        <Route path="/about" element={<AboutUs />} /> {/* New About Us Page*/}
+        <Route path="/Blog" element={<Blog />} />
+        <Route path="/Articles" element={<Articles />} />
+        <Route path="/Books" element={<Books />} />
+        <Route path="/Feedback" element={<Feedback />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/Admin" element={<Admin/>} />
+        <Route path="/AboutUs" element={<AboutUs />} />
+       
+        
       </Routes>
 
       {/* Footer is displayed on all pages */}
       <Footer />
+      
     </>
   );
 }
