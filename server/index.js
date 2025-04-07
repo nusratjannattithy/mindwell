@@ -1,88 +1,86 @@
-require('dotenv').config();
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const multer = require('multer');
-const bodyParser = require('body-parser');
+const express = require("express");
+const cors = require("cors");
+const multer = require("multer");
+const { connectDB, getDB } = require("./db");
 
-// Import the User model from models/registered.js
-const User = require('./models/registered.js');
+require("dotenv").config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use("/uploads", express.static("uploads"));
 
-// MongoDB Connection (Connected to "Mindwell" database)
-mongoose.connect("mongodb+srv://UserRomana:bhalolagena@mindwellproject.gwopv5x.mongodb.net/").then(() => console.log('MongoDB Connected to "Mindwell" database'))
-  .catch(err => console.error('MongoDB Connection Error:', err));
+// Set up multer for file handling
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/");
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
 
-// Multer Storage (for file uploads)
-const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-// API Route: User Registration
-app.post('/register', upload.fields([
-    { name: 'educationalCertificates' },
-    { name: 'resume' },
-    { name: 'governmentID' },
-    { name: 'consentForm' },
-    { name: 'specializationCertificates' },
-    { name: 'profilePhoto' }
-]), async (req, res) => {
-    try {
-        const { fullName, email, password, phone, userType, gender, birthdate, specialization, licenseNumber, experience } = req.body;
+// Routes
+app.get("/", (req, res) => {
+  res.send("MindWell API is running...");
+});
 
-        // Check for existing user
-        const existingUser = await User.findOne({ email });
-        if (existingUser) return res.status(400).json({ message: "User already exists" });
+const documentsFields = upload.fields([
+  { name: "educationalCertificates" },
+  { name: "resume" },
+  { name: "governmentID" },
+  { name: "consentForm" },
+  { name: "specializationCertificates" },
+  { name: "profilePhoto" },
+]);
+app.post("/registration", documentsFields, async (req, res, next) => {
+  try {
+    const db = getDB(); // Ensure DB is initialized
+    const usersCollection = db.collection("users");
 
-        // Create and save new user
-        const newUser = new User({
-            fullName, email, password, phone, userType, gender, birthdate, specialization, licenseNumber, experience,
-            documents: {
-                educationalCertificates: req.files['educationalCertificates'] ? req.files['educationalCertificates'][0].originalname : null,
-                resume: req.files['resume'] ? req.files['resume'][0].originalname : null,
-                governmentID: req.files['governmentID'] ? req.files['governmentID'][0].originalname : null,
-                consentForm: req.files['consentForm'] ? req.files['consentForm'][0].originalname : null,
-                specializationCertificates: req.files['specializationCertificates'] ? req.files['specializationCertificates'][0].originalname : null,
-                profilePhoto: req.files['profilePhoto'] ? req.files['profilePhoto'][0].originalname : null,
-            }
-        });
+    const formFields = req.body;
+    const uploadedFiles = req.files;
 
-        await newUser.save();
-        res.status(201).json({ message: "User registered successfully!", user: newUser });
+    const fileBaseURL = `${process.env.BASE_URL}/uploads/`; // *** the url must change when it is in production *** //
+    const fileURLs = {};
 
-    } catch (error) {
-        console.error("Registration Error:", error);
-        res.status(500).json({ message: "Server Error", error });
+    for (let key in uploadedFiles) {
+      if (uploadedFiles[key]) {
+        fileURLs[key] = fileBaseURL + uploadedFiles[key][0].filename;
+      }
     }
+
+    const userData = {
+      ...formFields,
+      documents: { ...fileURLs },
+    };
+
+    await usersCollection.insertOne(userData);
+
+    res.status(201).json({ message: "User registered successfully" });
+  } catch (error) {
+    console.error("Registration Error:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
 });
 
-// Start Server with Port Handling
-const server = app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+// Start server
+const startServer = async () => {
+  try {
+    await connectDB();
+    app.listen(PORT, () => {
+      console.log("Server is live at http://localhost:${PORT}");
+    });
+  } catch (err) {
+    console.error("Server failed to start:", err.message);
+    process.exit(1);
+  }
+};
 
-// Handle Port In Use Error
-server.on('error', (err) => {
-    if (err.code === 'EADDRINUSE') {
-        console.error(`Port ${PORT} is in use, trying another port...`);
-        const net = require('net');
-        const newServer = net.createServer();
-
-        newServer.listen(0, () => {
-            const newPort = newServer.address().port;
-            newServer.close(() => {
-                app.listen(newPort, () => {
-                    console.log(`Server running on free port ${newPort}`);
-                });
-            });
-        });
-    } else {
-        console.error('Server error:', err);
-    }
-});
+startServer();

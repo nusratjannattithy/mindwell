@@ -12,7 +12,7 @@ import Registration from './Components/Registration';
 import MoodEnhancement from './Components/MoodEnhancement';
 import MoodTracking from './Components/MoodTracking';
 import Helpline from './Components/Helpline'; 
-import AboutUs from './Components/AboutUs';  // Import AboutUs Component
+import AboutUs from './Components/AboutUs';  
 import Home from './Pages/Home';
 
 function App() {
@@ -25,7 +25,7 @@ function App() {
       {/* Define Routes for Navigation */}
       <Routes>
         {/* Define different routes for different components */}
-        <Route path="/" element={<Home />} /> {/* Display Hero on home page */}
+        <Route path="/" element={<Home />} /> 
         
         <Route path="/resources" element={<Resources/>} />
         <Route path="/LogIn" element={<LogIn />} />
