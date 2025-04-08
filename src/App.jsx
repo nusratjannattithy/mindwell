@@ -19,6 +19,9 @@ import Feedback from './Components/Feedback';
 import Home from './Pages/Home';
 import AboutUs from './Components/AboutUs.jsx';
 import Admin from './Pages/Admin';
+import ConsultantProfile from './Components/ConsultantProfile'; 
+
+
 function App() {
   return (
     <>
@@ -35,6 +38,7 @@ function App() {
         <Route path="/Registration" element={<Registration/>} />
         <Route path="/assessment" element={<SelfTest />} />
         <Route path="/options" element={<OptionsPage />} />
+
         <Route path="/BookAppointment" element={<BookAppointment />} />
         <Route path="/MoodTracking" element={<MoodTracking/>} />
         <Route path="/MoodEnhancement" element={<MoodEnhancement/>} />
@@ -46,8 +50,8 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/Admin" element={<Admin/>} />
         <Route path="/AboutUs" element={<AboutUs />} />
-       
-        
+        <Route path="/consultant/:id" element={<ConsultantProfile />} />
+
       </Routes>
 
       {/* Footer is displayed on all pages */}

@@ -12,10 +12,12 @@
   "dependencies": {
     "@headlessui/react": "^2.2.1",
     "@tailwindcss/vite": "^4.0.8",
+
     "axios": "^1.8.4",
     "dotenv": "^16.4.7",
     "framer-motion": "^12.5.0",
     "lucide-react": "^0.487.0",
+
     "mindwell": "file:",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

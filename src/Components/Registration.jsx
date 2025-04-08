@@ -1,27 +1,31 @@
-import React, { useState } from "react";
-import Heading from "./Heading";
+/* eslint-disable no-unused-vars */
+import React, { useState } from 'react';
+import Heading from './Heading';
+
+
 
 const Registration = () => {
   const [userType, setUserType] = useState("");
   const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    phone: "",
-    gender: "",
-    birthdate: "",
-    specialization: "",
-    licenseNumber: "",
-    experience: "",
-  });
-  const [documents, setDocuments] = useState({
-    educationalCertificates: null,
-    resume: null,
-    governmentID: null,
-    consentForm: null,
-    specializationCertificates: null,
-    profilePhoto: null,
+    fullName: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    phone: '',
+    gender: '',
+    birthdate: '',
+    specialization: '',
+    licenseNumber: '',
+    experience: '',
+    documents: {
+      educationalCertificates: null,
+      resume: null,
+      governmentID: null,
+      consentForm: null,
+      specializationCertificates: null,
+      profilePhoto: null,
+    },
+
   });
 
   const [error, setError] = useState("");
@@ -33,8 +37,12 @@ const Registration = () => {
 
   const handleFileChange = (e) => {
     const { name, files } = e.target;
-    console.log(name, files[0]);
-    setDocuments({ ...documents, [name]: files[0] });
+
+    setFormData({
+      ...formData,
+      documents: { ...formData.documents, [name]: files[0] },
+    });
+
   };
 
   const handleSubmit = async (e) => {
@@ -78,9 +86,11 @@ const Registration = () => {
     }
   };
 
-  // Patient Fields
+
+  // Patient Fields 
   const renderPatientFields = () => (
     <>
+   
       <div>
         <label className="block text-sm font-semibold text-gray-700">Phone Number</label>
         <input
@@ -164,12 +174,12 @@ const Registration = () => {
 
       {/* Document Upload Fields */}
       {[
-        { label: "Educational Certificates", name: "educationalCertificates" },
-        { label: "Professional Resume / CV", name: "resume" },
-        { label: "Government-issued ID", name: "governmentID" },
-        { label: "Consent to Platform Policies", name: "consentForm" },
-        { label: "Specialization Certificates", name: "specializationCertificates" },
-        { label: "Profile Photo", name: "profilePhoto" },
+        { label: 'Educational Certificates', name: 'educationalCertificates' },
+        { label: 'Professional Resume / CV', name: 'resume' },
+        { label: 'Government-issued ID', name: 'governmentID' },
+        { label: 'Consent to Platform Policies', name: 'consentForm' },
+        { label: 'Specialization Certificates', name: 'specializationCertificates' },
+        { label: 'Profile Photo', name: 'profilePhoto' },
       ].map((doc) => (
         <div key={doc.name} className="col-span-2">
           <label className="block text-sm font-semibold text-gray-700">{doc.label}</label>
@@ -187,101 +197,97 @@ const Registration = () => {
 
   return (
     <>
-      <Heading Headline={"Let's Start Your Mental Health Journey with MindWell"} pagename={"Registration"} />
-      <div className="flex flex-col min-h-screen">
-        <div className="flex-1 flex items-center justify-center bg-blue-100">
-          {!userType ? (
-            <div className="bg-white p-10 rounded-lg shadow-xl text-center max-w-md w-full">
-              <h2 className="text-3xl font-bold text-blue-700">Register as</h2>
-              <p className="text-gray-600 mt-2 mb-6">Please select your role to continue</p>
-              <div className="flex gap-4 justify-center">
-                <button
-                  onClick={() => setUserType("patient")}
-                  className="w-1/2 py-3 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition"
-                >
-                  Patient
-                </button>
-                <button
-                  onClick={() => setUserType("psychologist")}
-                  className="w-1/2 py-3 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition"
-                >
-                  Psychologist
-                </button>
-              </div>
-            </div>
-          ) : (
-            <div className="w-full max-w-5xl p-8 bg-white shadow-2xl rounded-lg">
-              <h2 className="text-4xl font-bold text-blue-700 text-center mb-6">
-                {userType === "patient" ? "Patient Registration" : "Psychologist Registration"}
-              </h2>
-              {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-
-              <form
-                onSubmit={handleSubmit}
-                encType="multipart/form-data"
-                className="grid grid-cols-1 md:grid-cols-2 gap-6"
+     <Heading Headline={"Let's Start Your Mental Health Journey with MindWell"} pagename={"Registration"}/>
+     <div className="flex flex-col min-h-screen">
+      <div className="flex-1 flex items-center justify-center bg-blue-100">
+        {!userType ? (
+          <div className="bg-white p-10 rounded-lg shadow-xl text-center max-w-md w-full">
+            <h2 className="text-3xl font-bold text-blue-700">Register as</h2>
+            <p className="text-gray-600 mt-2 mb-6">Please select your role to continue</p>
+            <div className="flex gap-4 justify-center">
+              <button
+                onClick={() => setUserType('patient')}
+                className="w-1/2 py-3 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition"
               >
-                {/* Common Fields */}
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700">Full Name</label>
-                  <input
-                    type="text"
-                    name="fullName"
-                    value={formData.fullName}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full mt-1 p-3 border border-gray-300 rounded-lg"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700">Email</label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full mt-1 p-3 border border-gray-300 rounded-lg"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700">Password</label>
-                  <input
-                    type="password"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full mt-1 p-3 border border-gray-300 rounded-lg"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700">Confirm Password</label>
-                  <input
-                    type="password"
-                    name="confirmPassword"
-                    value={formData.confirmPassword}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full mt-1 p-3 border border-gray-300 rounded-lg"
-                  />
-                </div>
-
-                {userType === "patient" ? renderPatientFields() : renderPsychologistFields()}
-
-                <div className="col-span-2 text-center">
-                  <button type="submit" className="py-3 px-8 bg-blue-500 text-white rounded-lg">
-                    Create Account
-                  </button>
-                </div>
-              </form>
+                Patient
+              </button>
+              <button
+                onClick={() => setUserType('psychologist')}
+                className="w-1/2 py-3 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition"
+              >
+                Psychologist
+              </button>
             </div>
-          )}
-        </div>
+          </div>
+        ) : (
+          <div className="w-full max-w-5xl p-8 bg-white shadow-2xl rounded-lg">
+            <h2 className="text-4xl font-bold text-blue-700 text-center mb-6">
+              {userType === 'patient' ? 'Patient Registration' : 'Psychologist Registration'}
+            </h2>
+            {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+
+            <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Common Fields */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700">Full Name</label>
+                <input
+                  type="text"
+                  name="fullName"
+                  value={formData.fullName}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full mt-1 p-3 border border-gray-300 rounded-lg"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700">Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full mt-1 p-3 border border-gray-300 rounded-lg"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700">Password</label>
+                <input
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full mt-1 p-3 border border-gray-300 rounded-lg"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700">Confirm Password</label>
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full mt-1 p-3 border border-gray-300 rounded-lg"
+                />
+              </div>
+
+              {userType === 'patient' ? renderPatientFields() : renderPsychologistFields()}
+
+              <div className="col-span-2 text-center">
+                <button type="submit" className="py-3 px-8 bg-blue-500 text-white rounded-lg">Create Account</button>
+              </div>
+            </form>
+          </div>
+        )}
       </div>
+    
+    </div>
+  
     </>
   );
 };
