@@ -74,6 +74,7 @@ const therapists = [
     availability: "Mon-Fri, 10AM-6PM",
     image: "src/assets/consultant_img/consultant10.jpg",
   },
+
 ];
 
 const BookAppointment = () => {
@@ -81,10 +82,12 @@ const BookAppointment = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
 
+
   const handleTherapistClick = (id) => {
     navigate(`/consultant/${id}`);
   };
   
+
 
   const filteredTherapists = therapists.filter(
     (t) =>
@@ -94,6 +97,7 @@ const BookAppointment = () => {
 
   return (
     <div className="max-w-6xl mx-auto bg-white p-6 rounded-lg shadow-md">
+
       <h2 className="text-2xl font-semibold mb-4 text-center text-blue-600">
         Our Consultants
       </h2>
@@ -102,6 +106,7 @@ const BookAppointment = () => {
         Click a consultant's photo to proceed to login.
 
       </p>
+
 
       <input
         type="text"
@@ -117,6 +122,7 @@ const BookAppointment = () => {
             <div
               key={t._id}
               className="p-4 border rounded-lg shadow-md cursor-pointer hover:bg-gray-100 flex flex-col items-center space-y-4"
+
               onClick={() => handleTherapistClick(t._id)}
 
             >
@@ -125,6 +131,7 @@ const BookAppointment = () => {
                 alt={t.name}
                 className="w-48 h-48 object-cover rounded-full border"
               />
+
               <div className="text-center">
                 <h3 className="text-xl font-semibold">{t.name}</h3>
                 <p className="text-gray-600">{t.specialization}</p>
@@ -140,4 +147,6 @@ const BookAppointment = () => {
   );
 };
 
+
 export default BookAppointment;
+
