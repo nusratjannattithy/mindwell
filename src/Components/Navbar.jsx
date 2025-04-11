@@ -138,6 +138,7 @@ const Navbar = () => {
                 Feedback/Review
               </Link>
               </li>
+              
              <li>
               <Link to="/Helpline" className="block text-amber-100 font-bold hover:text-fuchsia-400 transition">
                 Helpline
@@ -154,8 +155,7 @@ const Navbar = () => {
     About Us
     </Link>
     </li>
-
-          </ul>
+    </ul>
         </div>
       </div>
     </nav>

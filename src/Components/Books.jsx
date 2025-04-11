@@ -1,42 +1,41 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const Books = () => {
+  // Scroll to top on component mount
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // State to manage search query
   const [searchQuery, setSearchQuery] = useState("");
-
   // Data for books
   const books = [
     {
       title: "The Little Book of Mental Health",
       description: "Everyday wellbeing is about how we feel, think and behave. This book focuses on the importance of taking care of your mental state as much as your physical health.",
-      pdf: "./assets/books/book1.pdf", // Replace with actual file paths
-
+      pdf: "./assets/books/book1.pdf",
     },
     {
       title: "Look after your mental health using exercise",
-      description: "At a very basic level, physical activity means any movement of your body that uses your muscles and expends energy. One of the great things about phyical activity is that there are endless possibilities and there will be an activity to suit almost everyone!  It is recommended that the average adult should do between 75 and 150 minutes of exercise a week.",
-      pdf: "./assets/books/book2.pdf", // Replace with actual file paths
-
+      description: "At a very basic level, physical activity means any movement of your body that uses your muscles and expends energy. One of the great things about phyical activity is that there are endless possibilities...",
+      pdf: "./assets/books/book2.pdf",
     },
     {
       title: "Mental Health in the Workplace",
       description: "This book explores the intersection between mental health and the workplace, offering insights into the challenges faced by people with mental health difficulties in work settings.",
-      pdf: "./assets/books/book3.pdf", // Replace with actual file paths
-
+      pdf: "./assets/books/book3.pdf",
     },
     {
       title: "Wellbeing and Mental Health: A Guide to Looking After Yourself and Others",
       description: "A comprehensive guide on promoting positive mental health, offering advice on emotional wellbeing, coping with challenges, supporting others, and incorporating simple practices into daily life.",
-      pdf: "./assets/books/book4.pdf", // Replace with actual file paths
-
+      pdf: "./assets/books/book4.pdf",
     },
     {
       title: "Our Best Ever Mental Health Tips",
       description: "Research-based measures to protect and promote daily mental health, including strategies for stress and emotion management, and the importance of emotional support.",
-      pdf: "./assets/books/book5.pdf", // Replace with actual file paths
-
+      pdf: "./assets/books/book5.pdf",
     },
-    // Add more books as needed
   ];
 
   // Filtered books based on search query
@@ -45,8 +44,7 @@ const Books = () => {
   );
 
   return (
-    <div className="w-full min-h-screen p-10">
-      
+    <div className="w-full min-h-screen p-10 bg-blue-100 px-20">
       {/* Title and Subheading */}
       <h1 className="text-4xl font-bold text-center mb-2">Books</h1>
       <h2 className="text-2xl text-center text-gray-600 mb-8">Explore our collection of insightful books</h2>
@@ -55,7 +53,7 @@ const Books = () => {
       <div className="text-center mb-8 flex justify-center">
         <input
           type="text"
-          className="p-2 w-full border rounded-lg shadow-md"
+          className="p-2 w-full border rounded-lg shadow-md bg-white"
           placeholder="Search Books..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
@@ -63,13 +61,10 @@ const Books = () => {
         <button
           className="ml-2 p-2 bg-[#1A0B5B] text-white rounded-lg shadow-md"
           onClick={() => setSearchQuery(searchQuery)}
-
         >
           Search
         </button>
       </div>
-
-
 
       {/* Books List */}
       <div className="space-y-12">
@@ -91,6 +86,16 @@ const Books = () => {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Navigation Links */}
+      <div className="w-full flex flex-col items-center mt-12 bg-[#ffffff] p-8 rounded-lg shadow-lg">
+        <h3 className="text-2xl font-semibold text-[#1A0B5B] mb-4">Explore More Resources</h3>
+        <p className="text-lg text-gray-700 mb-6 text-center max-w-lg">Dive deeper into knowledge with our collection of insightful Blogs and recommended Articles that enrich your mental wellness journey.</p>
+        <div className="flex space-x-6">
+          <Link to="/blog" className="px-8 py-4 bg-[#1A0B5B] text-white text-lg rounded-lg hover:bg-[#120A3C] shadow-md transition-all">Explore Blogs</Link>
+          <Link to="/articles" className="px-8 py-4 bg-[#1A0B5B] text-white text-lg rounded-lg hover:bg-[#120A3C] shadow-md transition-all">Explore Articles</Link>
+        </div>
       </div>
     </div>
   );
