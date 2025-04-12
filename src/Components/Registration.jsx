@@ -65,9 +65,9 @@ const Registration = () => {
     for (const key in formData) {
       form.append(key, formData[key]);
     }
-    for (const key in documents) {
-      if (documents[key]) {
-        form.append(key, documents[key]);
+    for (const key in formData.documents) {
+      if (formData.documents[key]) {
+        form.append(key, formData.documents[key]);
       }
     }
 

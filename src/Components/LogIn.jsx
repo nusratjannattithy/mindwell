@@ -6,6 +6,7 @@ import Footer from './Footer';
 const LogIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [userType, setUserType] = useState('patient'); // default user type
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -18,13 +19,33 @@ const LogIn = () => {
       return;
     }
 
-    // Check for admin credentials
-    if (email === 'admin@mindwell.com' && password === 'ADMIN123') {
-      setError('');
-      console.log('Admin logged in');
-      navigate('/Admin');
+    // Simplified login check based on user type
+    if (userType === 'admin') {
+      if (email === 'admin@mindwell.com' && password === 'ADMIN123') {
+        setError('');
+        console.log('Admin logged in');
+        navigate('/Admin');
+      } else {
+        setError('Invalid admin credentials. Please try again.');
+      }
+    } else if (userType === 'therapist') {
+      // Placeholder for therapist auth
+      if (email === 'therapist@mindwell.com' && password === 'THERAPIST123') {
+        setError('');
+        console.log('Therapist logged in');
+        navigate('/TherapistDashboard');
+      } else {
+        setError('Invalid therapist credentials. Please try again.');
+      }
     } else {
-      setError('Invalid credentials. Please try again.');
+      // Patient login (as default)
+      if (email === 'patient@mindwell.com' && password === 'PATIENT123') {
+        setError('');
+        console.log('Patient logged in');
+        navigate('/PatientDashboard');
+      } else {
+        setError('Invalid patient credentials. Please try again.');
+      }
     }
   };
 
@@ -39,6 +60,21 @@ const LogIn = () => {
 
           <form onSubmit={handleSubmit} className="mt-6">
             <div>
+              <label className="block text-sm font-medium text-gray-700" htmlFor="userType">User</label>
+              <select
+                id="userType"
+                name="userType"
+                value={userType}
+                onChange={(e) => setUserType(e.target.value)}
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="admin">Admin</option>
+                <option value="therapist">Therapist</option>
+                <option value="patient">Patient</option>
+              </select>
+            </div>
+
+            <div className="mt-4">
               <label className="block text-sm font-medium text-gray-700" htmlFor="email">Email Address</label>
               <input
                 type="email"
@@ -50,6 +86,7 @@ const LogIn = () => {
                 className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
+
             <div className="mt-4">
               <label className="block text-sm font-medium text-gray-700" htmlFor="password">Password</label>
               <input
@@ -79,7 +116,7 @@ const LogIn = () => {
 
           <div className="text-center mt-4">
             <p className="text-sm text-gray-600">
-               Don't have an Account? 
+              Don't have an Account?
               <Link to="/Registration" className="ml-1 text-blue-500 hover:text-blue-600 font-semibold transition">
                 Create account
               </Link>
@@ -87,7 +124,6 @@ const LogIn = () => {
           </div>
         </div>
       </div>
-
     </>
   );
 };
