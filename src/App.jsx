@@ -9,21 +9,26 @@ import LogIn from './Components/LogIn';
 import SelfTest from './Components/SelfTest';
 import BookAppointment from "./Components/BookAppointment"; 
 import Registration from './Components/Registration';
-
-
-import Helpline from './Components/Helpline'; 
-import Feedback from './Components/Feedback';
-import AboutUs from './Components/AboutUs';  // Import AboutUs Component 
-
-
-
 import MoodEnhancement from './Components/MoodEnhancement';
 import MoodTracking from './Components/MoodTracking';
+import Helpline from './Components/Helpline'; 
 import Blog from './Components/Blog';
 import Articles from './Components/Articles';
 import Books from './Components/Books';
+import PatientDashboard from './Components/PatientDashboard';
+import Feedback from './Components/Feedback';
+import Home from './pages/Home';
+import AboutUs from './Components/AboutUS';
+import AppointmentForm from './Components/AppointmentForm';
+import PatientDashboard from './Components/PatientDashboard';
+import ActivitySection from './Components/ActivitySection';
+import HistorySection from './Components/HistorySection';
+import ProfileSettings from './Components/ProfileSettings';
+import ConsultantProfile from './Components/ConsultantProfile';
+import AdminDashboard from './Components/AdminDashboard';
+import Admin from './Pages/Admin';
+import ConsultantProfile from './Components/ConsultantProfile'; 
 
-import Home from './Pages/Home';
 
 
 function App() {
@@ -42,28 +47,30 @@ function App() {
         <Route path="/Registration" element={<Registration/>} />
         <Route path="/assessment" element={<SelfTest />} />
         <Route path="/options" element={<OptionsPage />} />
-
-
-        <Route path="/Helpline" element={<Helpline />} />
-        <Route path="/Feedback" element={<Feedback />} />
-        <Route path="/about" element={<AboutUs />} /> {/* New About Us Page */}
-
-
-
         <Route path="/book-appointment" element={<BookAppointment />} />
         <Route path="/MoodTracking" element={<MoodTracking/>} />
         <Route path="/MoodEnhancement" element={<MoodEnhancement/>} />
-       
+        <Route path="/Helpline" element={<Helpline />} />
         <Route path="/Blog" element={<Blog />} />
         <Route path="/Articles" element={<Articles />} />
         <Route path="/Books" element={<Books />} />
-
-       
+        <Route path="/dashboard" element={<PatientDashboard />} />
+        <Route path="/Books" element={<Books />} /> 
+        <Route path="/Feedback" element={<Feedback />} />
         <Route path="/" element={<Home />} />
+        <Route path="/AboutUs" element={<AboutUs />} />
+        <Route path="/AppointmentForm" element={<AppointmentForm />} />
+        <Route path="/dashboard" element={<PatientDashboard />} />
+        <Route path="/ActivitySection" element={<ActivitySection />} />
+        <Route path="/HistorySection" element={<HistorySection />} />
+        <Route path="/ProfileSettings" element={<ProfileSettings />} />
+        <Route path="/consultant/:id" element={<ConsultantProfile />} />
+        <Route path="/Admin" element ={<Admin/>}/>
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        
+        
        
-       
-
-
+        
       </Routes>
 
       {/* Footer is displayed on all pages */}
