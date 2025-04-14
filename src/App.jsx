@@ -16,12 +16,16 @@ import Blog from './Components/Blog';
 import Articles from './Components/Articles';
 import Books from './Components/Books';
 import Feedback from './Components/Feedback';
-import Home from './Pages/Home';
-import AboutUs from './Components/AboutUs.jsx';
+import Home from './pages/Home';
+import AboutUs from './Components/AboutUS';
+import AppointmentForm from './Components/AppointmentForm';
+import PatientDashboard from './Components/PatientDashboard';
+import ActivitySection from './Components/ActivitySection';
+import HistorySection from './Components/HistorySection';
+import ProfileSettings from './Components/ProfileSettings';
+import ConsultantProfile from './Components/ConsultantProfile';
+import AdminDashboard from './Components/AdminDashboard';
 import Admin from './Pages/Admin';
-import ConsultantProfile from './Components/ConsultantProfile'; 
-
-
 function App() {
   return (
     <>
@@ -38,25 +42,32 @@ function App() {
         <Route path="/Registration" element={<Registration/>} />
         <Route path="/assessment" element={<SelfTest />} />
         <Route path="/options" element={<OptionsPage />} />
-
-        <Route path="/BookAppointment" element={<BookAppointment />} />
+        <Route path="/book-appointment" element={<BookAppointment />} />
         <Route path="/MoodTracking" element={<MoodTracking/>} />
         <Route path="/MoodEnhancement" element={<MoodEnhancement/>} />
         <Route path="/Helpline" element={<Helpline />} />
         <Route path="/Blog" element={<Blog />} />
         <Route path="/Articles" element={<Articles />} />
-        <Route path="/Books" element={<Books />} />
+        <Route path="/Books" element={<Books />} /> 
         <Route path="/Feedback" element={<Feedback />} />
         <Route path="/" element={<Home />} />
-        <Route path="/Admin" element={<Admin/>} />
         <Route path="/AboutUs" element={<AboutUs />} />
+        <Route path="/AppointmentForm" element={<AppointmentForm />} />
+        <Route path="/dashboard" element={<PatientDashboard />} />
+        <Route path="/ActivitySection" element={<ActivitySection />} />
+        <Route path="/HistorySection" element={<HistorySection />} />
+        <Route path="/ProfileSettings" element={<ProfileSettings />} />
         <Route path="/consultant/:id" element={<ConsultantProfile />} />
-
+        <Route path="/Admin" element ={<Admin/>}/>
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        
+        
+       
+        
       </Routes>
 
       {/* Footer is displayed on all pages */}
       <Footer />
-      
     </>
   );
 }
