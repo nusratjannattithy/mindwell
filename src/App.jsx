@@ -15,11 +15,13 @@ import Helpline from './Components/Helpline';
 import Blog from './Components/Blog.jsx';
 import Articles from './Components/Articles';
 import Books from './Components/Books';
+import PatientDashboard from './Components/PatientDashboard';
 import Feedback from './Components/Feedback';
 import Home from './Pages/Home';
 import AboutUs from './Components/AboutUs.jsx';
 import Admin from './Pages/Admin';
 import ConsultantProfile from './Components/ConsultantProfile'; 
+
 
 
 function App() {
@@ -46,6 +48,7 @@ function App() {
         <Route path="/Blog" element={<Blog />} />
         <Route path="/Articles" element={<Articles />} />
         <Route path="/Books" element={<Books />} />
+        <Route path="/dashboard" element={<PatientDashboard />} />
         <Route path="/Feedback" element={<Feedback />} />
         <Route path="/" element={<Home />} />
         <Route path="/Admin" element={<Admin/>} />
