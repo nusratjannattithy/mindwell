@@ -1,12 +1,13 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Footer from './Footer';
 
 const LogIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -14,10 +15,16 @@ const LogIn = () => {
 
     if (!emailRegex.test(email)) {
       setError('Please enter a valid email address.');
-    } else {
+      return;
+    }
+
+    // Check for admin credentials
+    if (email === 'admin@mindwell.com' && password === 'ADMIN123') {
       setError('');
-      console.log('Login attempted with:', { email, password });
-      // Placeholder for authentication logic (to be implemented later)
+      console.log('Admin logged in');
+      navigate('/Admin');
+    } else {
+      setError('Invalid credentials. Please try again.');
     }
   };
 
@@ -80,8 +87,7 @@ const LogIn = () => {
           </div>
         </div>
       </div>
-      
-   
+
     </>
   );
 };

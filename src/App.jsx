@@ -3,24 +3,25 @@ import { Routes, Route } from 'react-router-dom';
 import Header from './Components/Header';
 import OptionsPage from './Components/OptionsPage';
 import Navbar from './Components/Navbar';
-import Hero from './Components/Hero';
 import Resources from './Components/Resources';
 import Footer from './Components/Footer';
 import LogIn from './Components/LogIn';
 import SelfTest from './Components/SelfTest';
 import BookAppointment from "./Components/BookAppointment"; 
 import Registration from './Components/Registration';
-
-import Helpline from './Components/Helpline'; 
-import Feedback from './Components/Feedback'; 
-
-
-
 import MoodEnhancement from './Components/MoodEnhancement';
 import MoodTracking from './Components/MoodTracking';
+import Helpline from './Components/Helpline'; 
 import Blog from './Components/Blog';
 import Articles from './Components/Articles';
 import Books from './Components/Books';
+import PatientDashboard from './Components/PatientDashboard';
+import Feedback from './Components/Feedback';
+import Home from './Pages/Home';
+import AboutUs from './Components/AboutUs.jsx';
+import Admin from './Pages/Admin';
+import ConsultantProfile from './Components/ConsultantProfile'; 
+
 
 
 function App() {
@@ -33,32 +34,32 @@ function App() {
       {/* Define Routes for Navigation */}
       <Routes>
         {/* Define different routes for different components */}
-        <Route path="/" element={<Hero />} /> {/* Display Hero on home page */}
+       
         <Route path="/resources" element={<Resources />} />
         <Route path="/LogIn" element={<LogIn />} />
         <Route path="/Registration" element={<Registration/>} />
         <Route path="/assessment" element={<SelfTest />} />
         <Route path="/options" element={<OptionsPage />} />
 
-        <Route path="/Helpline" element={<Helpline />} />
-        <Route path="/Feedback" element={<Feedback />} />
-
-
-
-        <Route path="/book-appointment" element={<BookAppointment />} />
+        <Route path="/BookAppointment" element={<BookAppointment />} />
         <Route path="/MoodTracking" element={<MoodTracking/>} />
         <Route path="/MoodEnhancement" element={<MoodEnhancement/>} />
-       
+        <Route path="/Helpline" element={<Helpline />} />
         <Route path="/Blog" element={<Blog />} />
         <Route path="/Articles" element={<Articles />} />
         <Route path="/Books" element={<Books />} />
-     
-        
+        <Route path="/dashboard" element={<PatientDashboard />} />
+        <Route path="/Feedback" element={<Feedback />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/Admin" element={<Admin/>} />
+        <Route path="/AboutUs" element={<AboutUs />} />
+        <Route path="/consultant/:id" element={<ConsultantProfile />} />
 
       </Routes>
 
       {/* Footer is displayed on all pages */}
       <Footer />
+      
     </>
   );
 }

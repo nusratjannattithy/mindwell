@@ -1,4 +1,3 @@
-
 /* eslint-disable no-unused-vars */
 
 import React from "react";
@@ -16,6 +15,7 @@ const Helpline = () => {
         <p className="text-lg text-gray-600 mt-2">
 
           We are here for you. If you are facing any mental health challenges 
+
 
           or need immediate support, feel free to contact us. Our team is available 24/7.
         </p>
