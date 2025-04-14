@@ -68,7 +68,6 @@ const Navbar = () => {
               </li>
               <li>
                 <Link to="/Helpline" className="hover:text-fuchsia-400 transition font-bold">
-
                   Helpline
                 </Link>
 
