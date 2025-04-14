@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const multer = require("multer");
 const { connectDB, getDB } = require("./db");
+const Feedback = require("./Schema/Feedback");
 
 require("dotenv").config();
 
@@ -29,6 +30,97 @@ const upload = multer({ storage });
 // Routes
 app.get("/", (req, res) => {
   res.send("MindWell API is running...");
+});
+
+// Helpline message endpoint
+app.post("/helpline", async (req, res) => {
+  try {
+    const { name, email, subject, message } = req.body;
+    const db = getDB();
+    const helplineCollection = db.collection("Helpline");
+
+    const result = await helplineCollection.insertOne({
+      name,
+      email,
+      subject,
+      message,
+      createdAt: new Date()
+    });
+
+    if (result.insertedId) {
+      res.status(201).json({ 
+        success: true,
+        message: "Your message has been sent successfully" 
+      });
+    } else {
+      throw new Error("Failed to insert message");
+    }
+  } catch (error) {
+    console.error("Helpline message error:", error);
+    res.status(500).json({
+      success: false,
+      message: error.message || "Failed to send message"
+    });
+  }
+});
+
+// Feedback endpoints
+app.post('/feedback', async (req, res) => {
+  try {
+    const { name, category, message } = req.body;
+    const db = getDB();
+    const feedbackCollection = db.collection("Feedback");
+
+    const result = await feedbackCollection.insertOne({
+      name,
+      category,
+      message,
+      createdAt: new Date()
+    });
+
+    if (result.insertedId) {
+      res.status(201).json({ 
+        success: true,
+        message: "Feedback submitted successfully" 
+      });
+    } else {
+      throw new Error("Failed to insert feedback");
+    }
+  } catch (error) {
+    console.error("Feedback submission error:", error);
+    res.status(500).json({
+      success: false,
+      message: error.message || "Failed to submit feedback"
+    });
+  }
+});
+
+app.get('/feedback', async (req, res) => {
+  try {
+    console.log("Attempting to fetch feedback...");
+    const db = getDB();
+    if (!db) {
+      console.error("Database connection not established");
+      return res.status(500).json({ success: false, message: "Database connection error" });
+    }
+    
+    const feedbackCollection = db.collection("Feedback");
+    console.log("Feedback collection:", feedbackCollection);
+    
+    const feedbackList = await feedbackCollection.find().toArray();
+    console.log("Fetched feedback:", feedbackList.length, "items");
+
+    res.status(200).json({
+      success: true,
+      feedback: feedbackList
+    });
+  } catch (error) {
+    console.error("Error fetching feedback:", error);
+    res.status(500).json({
+      success: false,
+      message: error.message || "Failed to fetch feedback"
+    });
+  }
 });
 
 const documentsFields = upload.fields([
@@ -75,7 +167,7 @@ const startServer = async () => {
   try {
     await connectDB();
     app.listen(PORT, () => {
-      console.log("Server is live at http://localhost:${PORT}");
+      console.log(`Server is live at http://localhost:${PORT}`);
     });
   } catch (err) {
     console.error("Server failed to start:", err.message);

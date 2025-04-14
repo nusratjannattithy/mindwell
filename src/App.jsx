@@ -12,7 +12,7 @@ import Registration from './Components/Registration';
 import MoodEnhancement from './Components/MoodEnhancement';
 import MoodTracking from './Components/MoodTracking';
 import Helpline from './Components/Helpline'; 
-import Blog from './Components/Blog';
+import Blog from './Components/Blog.jsx';
 import Articles from './Components/Articles';
 import Books from './Components/Books';
 import Feedback from './Components/Feedback';

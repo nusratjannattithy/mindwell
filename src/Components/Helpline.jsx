@@ -1,8 +1,52 @@
 /* eslint-disable no-unused-vars */
 
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
 
 const Helpline = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: ""
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(null);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus(null);
+    
+    try {
+      const response = await axios.post("http://localhost:5000/helpline", formData);
+      setSubmitStatus({
+        success: true,
+        message: response.data.message
+      });
+      setFormData({
+        name: "",
+        email: "",
+        subject: "",
+        message: ""
+      });
+    } catch (error) {
+      setSubmitStatus({
+        success: false,
+        message: error.response?.data?.message || "Failed to send message"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
   return (
 
     <div className="flex flex-col min-h-screen bg-gray-100 p-8">
@@ -61,28 +105,58 @@ const Helpline = () => {
         {/* Right Side - Contact Form */}
         <div>
           <h2 className="text-2xl font-bold mb-4">Send a Message</h2>
-          <form className="space-y-4">
+            <form className="space-y-4" onSubmit={handleSubmit}>
             <input
               type="text"
+              name="name"
               placeholder="Name"
               className="w-full p-3 border rounded-lg"
+              value={formData.name}
+              onChange={handleChange}
+              required
             />
             <input
               type="email"
+              name="email"
               placeholder="Email"
               className="w-full p-3 border rounded-lg"
+              value={formData.email}
+              onChange={handleChange}
+              required
             />
             <input
               type="text"
+              name="subject"
               placeholder="Subject"
               className="w-full p-3 border rounded-lg"
+              value={formData.subject}
+              onChange={handleChange}
+              required
             />
             <textarea
+              name="message"
               placeholder="Message"
               className="w-full p-3 border rounded-lg"
               rows="4"
+              value={formData.message}
+              onChange={handleChange}
+              required
             ></textarea>
-            <button className="w-full bg-blue-500 text-white py-3 rounded-lg">Send</button>
+            <button 
+              type="submit"
+              className="w-full bg-blue-500 text-white py-3 rounded-lg disabled:opacity-50"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Sending..." : "Send"}
+            </button>
+            
+            {submitStatus && (
+              <div className={`mt-4 p-3 rounded-lg ${
+                submitStatus.success ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+              }`}>
+                {submitStatus.message}
+              </div>
+            )}
 
              {/* Encouraging Message */}
       <div className="mt-10 text-center max-w-xl">
