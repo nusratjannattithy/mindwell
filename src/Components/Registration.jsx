@@ -3,9 +3,8 @@ import React, { useState } from 'react';
 import Heading from './Heading';
 
 
-
 const Registration = () => {
-  const [userType, setUserType] = useState("");
+  const [userType, setUserType] = useState('');
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -25,10 +24,9 @@ const Registration = () => {
       specializationCertificates: null,
       profilePhoto: null,
     },
-
   });
 
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -37,23 +35,20 @@ const Registration = () => {
 
   const handleFileChange = (e) => {
     const { name, files } = e.target;
-
     setFormData({
       ...formData,
       documents: { ...formData.documents, [name]: files[0] },
     });
-
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-
-    const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailRegex.test(formData.email)) {
-      setError("Please enter a valid email address.");
-      return;
+      setError('Please enter a valid email address.');
     } else if (formData.password !== formData.confirmPassword) {
+
       setError("Passwords do not match.");
       return;
     }
@@ -83,9 +78,14 @@ const Registration = () => {
     } catch (error) {
       console.error("Error:", error);
       setError("An error occurred while registering. Please try again.");
+
+      setError('Passwords do not match.');
+    } else {
+      setError('');
+      console.log('Registering:', { userType, ...formData });
+
     }
   };
-
 
   // Patient Fields 
   const renderPatientFields = () => (

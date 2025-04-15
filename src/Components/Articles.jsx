@@ -14,28 +14,28 @@ const Articles = () => {
     {
       title: "An integrative collaborative care model for people with mental illness and physical comorbidities",
       abstract: "Many individuals with mental health problems have comorbid physical conditions, or may present with substance/alcohol misuse or abuse issues. This results in complex treatment challenges that may not be adequately addressed by a model of care that is solely delivered by an individual clinician using a sole intervention...",
-      pdf: "./assets/articles/article1.pdf", // Replace with actual file paths
+      pdf: "/assets/articles/article1.pdf", // Replace with actual file paths
     },
     {
       title: "Cognitive–behavioral therapy for management of mental health and stress-related disorders: Recent advances in techniques and technologies",
       abstract: "Cognitive–behavioral therapy (CBT) helps individuals to eliminate avoidant and safety-seeking behaviors that prevent self-correction of faulty beliefs, thereby facilitating stress management to reduce stress-related disorders and enhance mental health...",
-      pdf: "./assets/articles/article2.pdf", // Replace with actual file paths
+      pdf: "/assets/articles/article2.pdf", // Replace with actual file paths
     },
     {
       title: "Understanding Your Mental Wellbeing",
       abstract: "An important first step in improving your mental health is developing a clear understanding of your signs of poor mental wellbeing. The impact of the changes you make will become clearer if you have a decent understanding of how poor mental wellbeing impacts your mind, body and behaviour...",
-      pdf: "./assets/articles/article3.pdf", // Replace with actual file paths
+      pdf: "/assets/articles/article3.pdf", // Replace with actual file paths
     },
     // Add more articles as needed
     {
       title: "Generalized Anxiety Disorder:When Worry Gets Out of Control",
       abstract: "Do you often find yourself worrying about everyday issues for no obvious reason? Are you always waiting for disaster to strike or excessively worried about things such as health, money, family, work, or school?If so, you may have a type of anxiety disorder called generalized anxiety disorder (GAD). GAD can make daily life feel like a constant state of worry, fear, and dread. The good news is GAD is treatable. Learn more about the symptoms of GAD and how to find help",
-      pdf: "./assets/articles/article4.pdf", // Replace with actual file paths
+      pdf: "/assets/articles/article4.pdf", // Replace with actual file paths
     },
     {
       title: "A journal exploring Depression",
       abstract: "Everyone feels sad or low sometimes, but these feelings usually pass. Depression (also called major depression, major depressive disorder, or clinical depression) is different.  It can cause severe symptoms that affect how a person feels, thinks, and handles daily activities, such as sleeping, eating, or working. Depression can affect anyone regardless of age, gender, race or ethnicity, income, culture, or education. Research suggests that genetic, biological, environmental, and psychological factors play a role in the disorder. Learn more..",
-      pdf: "./assets/articles/article5.pdf", // Replace with actual file paths
+      pdf: "/assets/articles/article5.pdf", // Replace with actual file paths
     },
   ];
 

@@ -14,27 +14,27 @@ const Books = () => {
     {
       title: "The Little Book of Mental Health",
       description: "Everyday wellbeing is about how we feel, think and behave. This book focuses on the importance of taking care of your mental state as much as your physical health.",
-      pdf: "./assets/books/book1.pdf",
+      pdf: "/assets/books/book1.pdf",
     },
     {
       title: "Look after your mental health using exercise",
       description: "At a very basic level, physical activity means any movement of your body that uses your muscles and expends energy. One of the great things about phyical activity is that there are endless possibilities...",
-      pdf: "./assets/books/book2.pdf",
+      pdf: "/assets/books/book2.pdf",
     },
     {
       title: "Mental Health in the Workplace",
       description: "This book explores the intersection between mental health and the workplace, offering insights into the challenges faced by people with mental health difficulties in work settings.",
-      pdf: "./assets/books/book3.pdf",
+      pdf: "/assets/books/book3.pdf",
     },
     {
       title: "Wellbeing and Mental Health: A Guide to Looking After Yourself and Others",
       description: "A comprehensive guide on promoting positive mental health, offering advice on emotional wellbeing, coping with challenges, supporting others, and incorporating simple practices into daily life.",
-      pdf: "./assets/books/book4.pdf",
+      pdf: "/assets/books/book4.pdf",
     },
     {
       title: "Our Best Ever Mental Health Tips",
       description: "Research-based measures to protect and promote daily mental health, including strategies for stress and emotion management, and the importance of emotional support.",
-      pdf: "./assets/books/book5.pdf",
+      pdf: "/assets/books/book5.pdf",
     },
   ];
 
