@@ -1,7 +1,4 @@
-<<<<<<< HEAD
 /* eslint-disable no-unused-vars */
-=======
->>>>>>> 15117f09ddc1802d3fa71071c4abc01026bcbe72
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import MoodTracking from './MoodTracking';

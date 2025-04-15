@@ -12,7 +12,8 @@ import Registration from './Components/Registration';
 import MoodEnhancement from './Components/MoodEnhancement';
 import MoodTracking from './Components/MoodTracking';
 import Helpline from './Components/Helpline'; 
-import Blog from './Components/Blog';
+import BlogList from './Components/BlogList';
+import BlogDetail from './Components/BlogDetail';
 import Articles from './Components/Articles';
 import Books from './Components/Books';
 import PatientDashboard from './Components/PatientDashboard';
@@ -20,14 +21,13 @@ import Feedback from './Components/Feedback';
 import Home from './pages/Home';
 import AboutUs from './Components/AboutUS';
 import AppointmentForm from './Components/AppointmentForm';
-import PatientDashboard from './Components/PatientDashboard';
 import ActivitySection from './Components/ActivitySection';
 import HistorySection from './Components/HistorySection';
 import ProfileSettings from './Components/ProfileSettings';
 import ConsultantProfile from './Components/ConsultantProfile';
 import AdminDashboard from './Components/AdminDashboard';
 import Admin from './Pages/Admin';
-import ConsultantProfile from './Components/ConsultantProfile'; 
+
 
 
 
@@ -51,7 +51,8 @@ function App() {
         <Route path="/MoodTracking" element={<MoodTracking/>} />
         <Route path="/MoodEnhancement" element={<MoodEnhancement/>} />
         <Route path="/Helpline" element={<Helpline />} />
-        <Route path="/Blog" element={<Blog />} />
+        <Route path="/blog" element={<BlogList />} />
+        <Route path="/blog/:id" element={<BlogDetail />} />
         <Route path="/Articles" element={<Articles />} />
         <Route path="/Books" element={<Books />} />
         <Route path="/dashboard" element={<PatientDashboard />} />
@@ -60,7 +61,6 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/AboutUs" element={<AboutUs />} />
         <Route path="/AppointmentForm" element={<AppointmentForm />} />
-        <Route path="/dashboard" element={<PatientDashboard />} />
         <Route path="/ActivitySection" element={<ActivitySection />} />
         <Route path="/HistorySection" element={<HistorySection />} />
         <Route path="/ProfileSettings" element={<ProfileSettings />} />

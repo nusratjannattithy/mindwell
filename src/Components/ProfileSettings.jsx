@@ -1,7 +1,4 @@
-<<<<<<< HEAD
 /* eslint-disable no-unused-vars */
-=======
->>>>>>> 15117f09ddc1802d3fa71071c4abc01026bcbe72
 import React, { useState } from 'react';
 
 const ProfileSettings = ({ patientData, setPatientData }) => {

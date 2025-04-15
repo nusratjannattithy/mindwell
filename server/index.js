@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const multer = require("multer");
 const { connectDB, getDB } = require("./db");
+const MoodTracking = require("./models/moodTracking");
 
 require("dotenv").config();
 
@@ -29,6 +30,39 @@ const upload = multer({ storage });
 // Routes
 app.get("/", (req, res) => {
   res.send("MindWell API is running...");
+});
+
+app.post("/moodtracking", async (req, res) => {
+  try {
+    const { userId, mood, distraction, result } = req.body;
+    if (mood === undefined || distraction === undefined || !result) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    const moodEntry = new MoodTracking({
+      userId,
+      mood,
+      distraction,
+      result,
+    });
+
+    await moodEntry.save();
+
+    res.status(201).json({ message: "Mood tracking data saved successfully" });
+  } catch (error) {
+    console.error("Error saving mood tracking data:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+app.get("/moodtracking", async (req, res) => {
+  try {
+    const entries = await MoodTracking.find().sort({ recordedAt: -1 }).limit(20);
+    res.status(200).json(entries);
+  } catch (error) {
+    console.error("Error fetching mood tracking data:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
 });
 
 const documentsFields = upload.fields([

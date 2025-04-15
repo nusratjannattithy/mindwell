@@ -112,7 +112,7 @@ const Resources = () => {
                             <img src={blog.image} alt={blog.title} className="w-full h-48 object-cover" />
                             <h4 className="text-2xl font-semibold text-[#1A0B5B]">{blog.title}</h4>
                             <p className="text-gray-600 mt-4">{blog.description}</p>
-                            <Link to={`/blog`} className="mt-4 inline-block text-white bg-[#1A0B5B] p-3 rounded-lg hover:bg-[#120A3C] transition-all">Explore</Link>
+                            <Link to={`/blog/${blog.id}`} className="mt-4 inline-block text-white bg-[#1A0B5B] p-3 rounded-lg hover:bg-[#120A3C] transition-all">Explore</Link>
                         </div>
                     ))}
                 </div>
