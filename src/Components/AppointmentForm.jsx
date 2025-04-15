@@ -1,7 +1,5 @@
-// File: src/components/AppointmentForm.jsx
 
 import { useState } from "react";
-
 
 export default function AppointmentForm() {
   const [type, setType] = useState("");
@@ -118,8 +116,18 @@ export default function AppointmentForm() {
       </div>
 
       <div className="mt-6 flex justify-end gap-4">
-        <Button variant="outline" onClick={resetForm}>Reset</Button>
-        <Button onClick={saveAppointment}>Save</Button>
+        <button
+          onClick={resetForm}
+          className="px-4 py-2 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-50 transition-colors"
+        >
+          Reset
+        </button>
+        <button
+          onClick={saveAppointment}
+          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+        >
+          Save
+        </button>
       </div>
     </div>
   );

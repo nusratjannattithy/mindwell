@@ -172,7 +172,7 @@ const ConsultantProfile = () => {
           {/* Left: Profile Image */}
           <div className="flex-shrink-0">
             <img
-              src={`/${consultant.image}`}
+              src={consultant.image.replace('src/assets/', '/src/assets/')}
               alt={consultant.name}
               className="w-52 h-52 rounded-xl object-cover border-4 border-blue-200 shadow-md"
             />
@@ -226,7 +226,7 @@ const ConsultantProfile = () => {
       {consultant.certificates.map((cert, index) => (
        <img
        key={index}
-       src={cert}
+       src={cert.replace('src/assets/', '/src/assets/')}
        alt={`Certificate ${index + 1}`}
        className="w-full h-48 object-cover rounded-lg shadow-md border"
      />     
@@ -238,10 +238,10 @@ const ConsultantProfile = () => {
   
         {/* Buttons */}
         <div className="mt-8 flex flex-wrap justify-center gap-6">
-          <button className="bg-blue-600 text-white px-6 py-2 rounded-full shadow-md hover:bg-purple-700">
+          <button className="bg-purple-600 text-white px-6 py-2 rounded-full shadow-md hover:bg-purple-700">
             Attachments
           </button>
-          <button className="bg-blue-600 text-white px-6 py-2 rounded-full shadow-md hover:bg-green-700">
+          <button className="bg-green-600 text-white px-6 py-2 rounded-full shadow-md hover:bg-green-700">
             Book Now
           </button>
           <button className="bg-blue-600 text-white px-6 py-2 rounded-full shadow-md hover:bg-blue-700">

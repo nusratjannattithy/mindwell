@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 
+import React from "react";
+
 const Helpline = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -57,10 +59,7 @@ const Helpline = () => {
           Reach Out for Help
         </h2>
         <p className="text-lg text-gray-600 mt-2">
-
           We are here for you. If you are facing any mental health challenges 
-
-
           or need immediate support, feel free to contact us. Our team is available 24/7.
         </p>
       </div>
@@ -161,10 +160,7 @@ const Helpline = () => {
              {/* Encouraging Message */}
       <div className="mt-10 text-center max-w-xl">
         <p className="text-xl font-semibold text-gray-700">
-
-
           Remember, you do not have to face it alone. We are just one call away.
-
         </p>
       </div>
 

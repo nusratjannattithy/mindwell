@@ -7,7 +7,7 @@ const MoodTracking = () => {
   const [distraction, setDistraction] = useState(5);
   const [result, setResult] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     let combinedResult = '';
@@ -25,6 +25,30 @@ const MoodTracking = () => {
     }
 
     setResult(combinedResult);
+
+    // Send data to backend
+    try {
+      const response = await fetch('http://localhost:5000/moodtracking', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          mood: Number(mood),
+          distraction: Number(distraction),
+          result: combinedResult,
+          // userId can be added here if user authentication is implemented
+        }),
+      });
+
+      if (!response.ok) {
+        console.error('Failed to save mood tracking data');
+      } else {
+        console.log('Mood tracking data saved successfully');
+      }
+    } catch (error) {
+      console.error('Error sending mood tracking data:', error);
+    }
   };
 
   const handleLinkClick = () => {

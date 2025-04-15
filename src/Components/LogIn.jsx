@@ -79,7 +79,7 @@ const LogIn = () => {
 
           <div className="text-center mt-4">
             <p className="text-sm text-gray-600">
-               Don't have an Account? 
+              Don't have an Account? 
               <Link to="/Registration" className="ml-1 text-blue-500 hover:text-blue-600 font-semibold transition">
                 Create account
               </Link>
@@ -87,7 +87,6 @@ const LogIn = () => {
           </div>
         </div>
       </div>
-
     </>
   );
 };

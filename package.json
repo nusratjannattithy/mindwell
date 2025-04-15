@@ -12,14 +12,12 @@
   "dependencies": {
     "@headlessui/react": "^2.2.1",
     "@tailwindcss/vite": "^4.0.8",
-<<<<<<< HEAD
-=======
+
     "lucide-react": "^0.487.0",
->>>>>>> b849fe2375b7e102a3b3080fa5f8ffbae7f2e58f
     "axios": "^1.8.4",
     "dotenv": "^16.4.7",
     "framer-motion": "^12.5.0",
-    "lucide-react": "^0.487.0",
+
     "mindwell": "file:",
     "nodemon": "^3.1.9",
     "react": "^19.0.0",
