@@ -10,41 +10,51 @@ const LogIn = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    setError('');
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       setError('Please enter a valid email address.');
       return;
     }
 
-    // Simplified login check based on user type
     if (userType === 'admin') {
       if (email === 'admin@mindwell.com' && password === 'ADMIN123') {
-        setError('');
         console.log('Admin logged in');
         navigate('/Admin');
       } else {
         setError('Invalid admin credentials. Please try again.');
       }
-    } else if (userType === 'therapist') {
-      // Placeholder for therapist auth
-      if (email === 'therapist@mindwell.com' && password === 'THERAPIST123') {
-        setError('');
-        console.log('Therapist logged in');
-        navigate('/TherapistDashboard');
-      } else {
-        setError('Invalid therapist credentials. Please try again.');
-      }
     } else {
-      // Patient login (as default)
-      if (email === 'patient@mindwell.com' && password === 'PATIENT123') {
-        setError('');
-        console.log('Patient logged in');
-        navigate('/PatientDashboard');
-      } else {
-        setError('Invalid patient credentials. Please try again.');
+      // For therapist and patient login using backend
+      try {
+        console.log("Logging in with:", { email, password, userType }); // Log request data
+        const response = await fetch('http://localhost:5000/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ email, password, userType })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          setError(data.message || 'Login failed.');
+        } else {
+          console.log(`${userType} logged in`, data.user);
+
+          if (userType === 'therapist') {
+            navigate('/TherapistDashboard');
+          } else {
+            navigate('/PatientDashboard');
+          }
+        }
+      } catch (err) {
+        console.error(err);
+        setError('Something went wrong. Please try again.');
       }
     }
   };
