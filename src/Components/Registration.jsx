@@ -41,14 +41,14 @@ const Registration = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailRegex.test(formData.email)) {
       setError('Please enter a valid email address.');
+      return;
     } else if (formData.password !== formData.confirmPassword) {
-
       setError("Passwords do not match.");
       return;
     }
@@ -70,7 +70,6 @@ const Registration = () => {
     try {
       const res = await fetch("http://localhost:5000/registration", {
         method: "POST",
-
         body: form,
       });
       const data = await res.json();
@@ -78,12 +77,6 @@ const Registration = () => {
     } catch (error) {
       console.error("Error:", error);
       setError("An error occurred while registering. Please try again.");
-
-      setError('Passwords do not match.');
-    } else {
-      setError('');
-      console.log('Registering:', { userType, ...formData });
-
     }
   };
 
