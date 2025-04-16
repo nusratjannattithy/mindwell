@@ -3,8 +3,6 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-import React from "react";
-
 const Helpline = () => {
   const [formData, setFormData] = useState({
     name: "",

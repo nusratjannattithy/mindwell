@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const multer = require("multer");
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 
 const { connectDB, getDB } = require("./db");
 
@@ -127,6 +127,8 @@ app.get('/feedback', async (req, res) => {
       success: false,
       message: error.message || "Failed to fetch feedback"
     });
+  }
+});
 
 app.post("/moodtracking", async (req, res) => {
   try {
