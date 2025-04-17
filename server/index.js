@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const multer = require("multer");
 const bcrypt = require("bcrypt");
+const mongoose = require('mongoose');
 
 const { connectDB, getDB } = require("./db");
 
@@ -9,6 +10,8 @@ const User = require("./models/registered");
 
 const Feedback = require("./Schema/Feedback");
 const MoodTracking = require("./models/moodTracking");
+
+const therapistRoutes = require('./therapistRoutes');  // Import therapist routes
 
 
 require("dotenv").config();
@@ -21,6 +24,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static("uploads"));
+app.use(therapistRoutes);
 
 // Set up multer for file handling
 const storage = multer.diskStorage({
@@ -38,6 +42,9 @@ const upload = multer({ storage });
 app.get("/", (req, res) => {
   res.send("MindWell API is running...");
 });
+
+// Add this line to use therapist routes at '/api'
+app.use('/api', therapistRoutes);  // <-- Added therapist routes under '/api'
 
 // Helpline message endpoint
 app.post("/helpline", async (req, res) => {
@@ -205,10 +212,6 @@ app.post("/registration", documentsFields, async (req, res) => {
   }
 });
 
-
-
-
-
 app.post("/login", async (req, res) => {
   const { userType, email, password } = req.body;
 
@@ -284,4 +287,3 @@ const startServer = async () => {
 };
 
 startServer();
-
