@@ -6,25 +6,56 @@ import Footer from './Footer';
 const LogIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [userType, setUserType] = useState('patient'); // default user type
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    setError('');
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       setError('Please enter a valid email address.');
       return;
     }
 
-    // Check for admin credentials
-    if (email === 'admin@mindwell.com' && password === 'ADMIN123') {
-      setError('');
-      console.log('Admin logged in');
-      navigate('/Admin');
+    if (userType === 'admin') {
+      if (email === 'admin@mindwell.com' && password === 'ADMIN123') {
+        console.log('Admin logged in');
+        navigate('/Admin');
+      } else {
+        setError('Invalid admin credentials. Please try again.');
+      }
     } else {
-      setError('Invalid credentials. Please try again.');
+      // For therapist and patient login using backend
+      try {
+        console.log("Logging in with:", { email, password, userType }); // Log request data
+        const response = await fetch('http://localhost:5000/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ email, password, userType })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          setError(data.message || 'Login failed.');
+        } else {
+          console.log(`${userType} logged in`, data.user);
+
+          if (userType === 'therapist') {
+            navigate('/TherapistDashboard');
+          } else {
+            navigate('/PatientDashboard');
+          }
+        }
+      } catch (err) {
+        console.error(err);
+        setError('Something went wrong. Please try again.');
+      }
     }
   };
 
@@ -39,6 +70,21 @@ const LogIn = () => {
 
           <form onSubmit={handleSubmit} className="mt-6">
             <div>
+              <label className="block text-sm font-medium text-gray-700" htmlFor="userType">User</label>
+              <select
+                id="userType"
+                name="userType"
+                value={userType}
+                onChange={(e) => setUserType(e.target.value)}
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="admin">Admin</option>
+                <option value="therapist">Therapist</option>
+                <option value="patient">Patient</option>
+              </select>
+            </div>
+
+            <div className="mt-4">
               <label className="block text-sm font-medium text-gray-700" htmlFor="email">Email Address</label>
               <input
                 type="email"
@@ -50,6 +96,7 @@ const LogIn = () => {
                 className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
+
             <div className="mt-4">
               <label className="block text-sm font-medium text-gray-700" htmlFor="password">Password</label>
               <input
@@ -79,7 +126,9 @@ const LogIn = () => {
 
           <div className="text-center mt-4">
             <p className="text-sm text-gray-600">
+
               Don't have an Account? 
+
               <Link to="/Registration" className="ml-1 text-blue-500 hover:text-blue-600 font-semibold transition">
                 Create account
               </Link>

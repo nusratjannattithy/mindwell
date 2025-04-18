@@ -41,17 +41,42 @@ const Registration = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailRegex.test(formData.email)) {
       setError('Please enter a valid email address.');
+      return;
     } else if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match.');
-    } else {
-      setError('');
-      console.log('Registering:', { userType, ...formData });
+      setError("Passwords do not match.");
+      return;
+    }
+    setError("");
+    console.log("Registering:", { userType, ...formData });
+
+    const form = new FormData();
+    form.append("userType", userType);
+    for (const key in formData) {
+      form.append(key, formData[key]);
+    }
+    for (const key in formData.documents) {
+      if (formData.documents[key]) {
+        form.append(key, formData.documents[key]);
+      }
+    }
+
+    // send data to server
+    try {
+      const res = await fetch("http://localhost:5000/registration", {
+        method: "POST",
+        body: form,
+      });
+      const data = await res.json();
+      console.log(data);
+    } catch (error) {
+      console.error("Error:", error);
+      setError("An error occurred while registering. Please try again.");
     }
   };
 

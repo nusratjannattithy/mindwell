@@ -1,28 +1,26 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-const documentSchema = new mongoose.Schema({
-  educationalCertificates: { type: String, default: null },
-  resume: { type: String, default: null },
-  governmentID: { type: String, default: null },
-  consentForm: { type: String, default: null },
-  specializationCertificates: { type: String, default: null },
-  profilePhoto: { type: String, default: null },
-});
-
-const userSchema = new mongoose.Schema(
-  {
+const UserSchema = new mongoose.Schema({
     fullName: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    phone: { type: String },
-    gender: { type: String, enum: ["Male", "Female", "Other"], default: "Other" },
-    birthdate: { type: Date },
+    phone: { type: String, required: true },
+    userType: { type: String, required: true, enum: ['patient', 'psychologist', 'admin'] },
+    gender: { type: String, enum: ['male', 'female', 'other'] },
+    birthdate: { type: String },
     specialization: { type: String },
     licenseNumber: { type: String },
     experience: { type: String },
-    documents: { type: documentSchema },
-  },
-  { timestamps: true }
-);
+    documents: {
+        educationalCertificates: { type: String },
+        resume: { type: String },
+        governmentID: { type: String },
+        consentForm: { type: String },
+        specializationCertificates: { type: String },
+        profilePhoto: { type: String }
+    }
+}, { timestamps: true });
 
-module.exports = mongoose.model("User", userSchema);
+const User = mongoose.model('Users', UserSchema);
+
+module.exports = User;

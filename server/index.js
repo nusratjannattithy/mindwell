@@ -9,6 +9,18 @@ const MoodTracking = require("./models/moodTracking");
 console.log('Loading environment variables...');
 require("dotenv").config(); // Load environment variables from .env file
 console.log('MONGODB_URI:', process.env.MONGODB_URI);
+const bcrypt = require("bcrypt");
+
+const { connectDB, getDB } = require("./db");
+
+const User = require("./models/registered");
+
+const Feedback = require("./Schema/Feedback");
+const MoodTracking = require("./models/moodTracking");
+
+
+require("dotenv").config();
+
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -171,14 +183,15 @@ const documentsFields = upload.fields([
 ]);
 
 app.post("/registration", documentsFields, async (req, res, next) => {
+app.post("/registration", documentsFields, async (req, res) => {
   try {
-    const db = getDB(); // Ensure DB is initialized
+    const db = getDB();
     const usersCollection = db.collection("users");
 
     const formFields = req.body;
     const uploadedFiles = req.files;
 
-    const fileBaseURL = `${process.env.BASE_URL}/uploads/`; // *** the url must change when it is in production *** //
+    const fileBaseURL = `${process.env.BASE_URL}/uploads/`;
     const fileURLs = {};
 
     for (let key in uploadedFiles) {
@@ -187,8 +200,10 @@ app.post("/registration", documentsFields, async (req, res, next) => {
       }
     }
 
+    const hashedPassword = await bcrypt.hash(formFields.password, 10);
     const userData = {
       ...formFields,
+      password: hashedPassword, // hashed password
       documents: { ...fileURLs },
     };
 
@@ -205,6 +220,72 @@ const selfTestRoutes = require('./routes/selftest');
 
 app.use('/api/selftest', selfTestRoutes);
 
+
+
+
+
+app.post("/login", async (req, res) => {
+  const { userType, email, password } = req.body;
+
+  if (!userType || !email || !password) {
+    return res.status(400).json({
+      message: "Missing required fields",
+      details: "userType, email, and password are required"
+    });
+  }
+
+  if (!['patient', 'psychologist', 'admin'].includes(userType)) {
+    return res.status(400).json({
+      message: "Invalid user type",
+      details: "User type must be patient, psychologist, or admin"
+    });
+  }
+
+  try {
+    const user = await User.findOne({ email, userType });
+
+    if (!user) {
+      return res.status(400).json({
+        message: "User not found or user type mismatch.",
+        details: "Please check your credentials and try again."
+      });
+    }
+
+    if (!user.password || typeof user.password !== 'string') {
+      return res.status(500).json({
+        message: "User password is invalid",
+        details: "Stored password is missing or not a string"
+      });
+    }
+
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
+      return res.status(401).json({
+        message: "Invalid credentials",
+        details: "The password you entered is incorrect."
+      });
+    }
+
+    const { password: _, ...userData } = user.toObject();
+    res.status(200).json({
+      message: "Login successful",
+      user: userData
+    });
+  } catch (error) {
+    console.error("Login error details:", {
+      message: error.message,
+      stack: error.stack,
+      requestBody: req.body
+    });
+    res.status(500).json({
+      message: "Login failed",
+      details: error.message || "An unexpected error occurred. Please try again later.",
+      errorType: error.name
+    });
+  }
+});
+
+// Start server
 const startServer = async () => {
   try {
     // Ensure we are connecting to MongoDB using the environment variable MONGODB_URI
@@ -234,3 +315,4 @@ const startServer = async () => {
 };
 
 startServer();
+

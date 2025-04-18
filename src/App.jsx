@@ -12,8 +12,6 @@ import Registration from './Components/Registration';
 import MoodEnhancement from './Components/MoodEnhancement';
 import MoodTracking from './Components/MoodTracking';
 import Helpline from './Components/Helpline'; 
-import Blog from './Components/Blog.jsx';
-
 import BlogList from './Components/BlogList';
 import BlogDetail from './Components/BlogDetail';
 import Articles from './Components/Articles';
@@ -45,7 +43,7 @@ function App() {
         {/* Define different routes for different components */}
        
         <Route path="/resources" element={<Resources />} />
-        <Route path="/LogIn" element={<LogIn />} />
+        <Route path="/login" element={<LogIn />} />
         <Route path="/Registration" element={<Registration/>} />
         <Route path="/assessment" element={<SelfTest />} />
         <Route path="/options" element={<OptionsPage />} />
