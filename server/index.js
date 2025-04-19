@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const multer = require("multer");
 const mongoose = require("mongoose");
-const { getDB } = require("./db");
+const { connectDB, getDB } = require("./db");
 const Feedback = require("./Schema/Feedback");
 const MoodTracking = require("./models/moodTracking");
 
@@ -11,16 +11,7 @@ require("dotenv").config(); // Load environment variables from .env file
 console.log('MONGODB_URI:', process.env.MONGODB_URI);
 const bcrypt = require("bcrypt");
 
-const { connectDB, getDB } = require("./db");
-
 const User = require("./models/registered");
-
-const Feedback = require("./Schema/Feedback");
-const MoodTracking = require("./models/moodTracking");
-
-
-require("dotenv").config();
-
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -182,7 +173,6 @@ const documentsFields = upload.fields([
   { name: "profilePhoto", maxCount: 1 },
 ]);
 
-app.post("/registration", documentsFields, async (req, res, next) => {
 app.post("/registration", documentsFields, async (req, res) => {
   try {
     const db = getDB();
