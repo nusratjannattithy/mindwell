@@ -47,7 +47,7 @@ const LogIn = () => {
           console.log(`${userType} logged in`, data.user);
 
           if (userType === 'therapist') {
-            navigate('/condashboard');
+            navigate('/Consultdashboard');
           } else {
             navigate('/dashboard');
           }
