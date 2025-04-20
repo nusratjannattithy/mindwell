@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
+
 import { Link, useNavigate } from 'react-router-dom';
-import Footer from './Footer';
 
 const LogIn = () => {
   const [email, setEmail] = useState('');
@@ -30,13 +30,13 @@ const LogIn = () => {
     } else {
       // For therapist and patient login using backend
       try {
-        console.log("Logging in with:", { email, password, userType }); // Log request data
+        console.log("Logging in with:", { userType, email, password}); // Log request data
         const response = await fetch('http://localhost:5000/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ email, password, userType })
+          body: JSON.stringify({ userType, email, password})
         });
 
         const data = await response.json();
@@ -47,13 +47,13 @@ const LogIn = () => {
           console.log(`${userType} logged in`, data.user);
 
           if (userType === 'therapist') {
-            navigate('/TherapistDashboard');
+            navigate('/condashboard');
           } else {
-            navigate('/PatientDashboard');
+            navigate('/dashboard');
           }
         }
       } catch (err) {
-        console.error(err);
+      
         setError('Something went wrong. Please try again.');
       }
     }
@@ -79,7 +79,7 @@ const LogIn = () => {
                 className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="admin">Admin</option>
-                <option value="therapist">Therapist</option>
+                <option value="therapist">Consultant</option>
                 <option value="patient">Patient</option>
               </select>
             </div>
@@ -126,9 +126,7 @@ const LogIn = () => {
 
           <div className="text-center mt-4">
             <p className="text-sm text-gray-600">
-
               Don't have an Account? 
-
               <Link to="/Registration" className="ml-1 text-blue-500 hover:text-blue-600 font-semibold transition">
                 Create account
               </Link>

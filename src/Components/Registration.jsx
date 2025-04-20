@@ -205,17 +205,17 @@ const Registration = () => {
                 Patient
               </button>
               <button
-                onClick={() => setUserType('psychologist')}
+                onClick={() => setUserType('therapist')}
                 className="w-1/2 py-3 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition"
               >
-                Psychologist
+                Consultant
               </button>
             </div>
           </div>
         ) : (
           <div className="w-full max-w-5xl p-8 bg-white shadow-2xl rounded-lg">
             <h2 className="text-4xl font-bold text-blue-700 text-center mb-6">
-              {userType === 'patient' ? 'Patient Registration' : 'Psychologist Registration'}
+              {userType === 'patient' ? 'Patient Registration' : 'Therapist Registration'}
             </h2>
             {error && <p className="text-red-500 text-center mb-4">{error}</p>}
 
