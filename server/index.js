@@ -1,22 +1,21 @@
 const express = require("express");
 const cors = require("cors");
 const multer = require("multer");
-
-
-
+const mongoose = require("mongoose");
 const { connectDB, getDB } = require("./db");
-
-const User = require("./models/registered");
-
 const Feedback = require("./Schema/Feedback");
 const MoodTracking = require("./models/moodTracking");
 const { Collection } = require("mongodb");
 
+console.log('Loading environment variables...');
+require("dotenv").config(); // Load environment variables from .env file
+console.log('MONGODB_URI:', process.env.MONGODB_URI);
+const bcrypt = require("bcrypt");
 
-require("dotenv").config();
+const User = require("./models/registered");
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
 // Middleware
 app.use(cors());
@@ -57,9 +56,9 @@ app.post("/helpline", async (req, res) => {
     });
 
     if (result.insertedId) {
-      res.status(201).json({ 
+      res.status(201).json({
         success: true,
-        message: "Your message has been sent successfully" 
+        message: "Your message has been sent successfully"
       });
     } else {
       throw new Error("Failed to insert message");
@@ -86,9 +85,9 @@ app.post('/feedback', async (req, res) => {
     });
 
     if (result.insertedId) {
-      res.status(201).json({ 
+      res.status(201).json({
         success: true,
-        message: "Feedback submitted successfully" 
+        message: "Feedback submitted successfully"
       });
     } else {
       throw new Error("Failed to insert feedback");
@@ -110,10 +109,10 @@ app.get('/feedback', async (req, res) => {
       console.error("Database connection not established");
       return res.status(500).json({ success: false, message: "Database connection error" });
     }
-    
+
     const feedbackCollection = db.collection("Feedback");
     console.log("Feedback collection:", feedbackCollection);
-    
+
     const feedbackList = await feedbackCollection.find().toArray();
     console.log("Fetched feedback:", feedbackList.length, "items");
 
@@ -130,6 +129,7 @@ app.get('/feedback', async (req, res) => {
   }
 });
 
+// Mood tracking
 app.post("/moodtracking", async (req, res) => {
   try {
     const { userId, mood, distraction, result } = req.body;
@@ -164,12 +164,12 @@ app.get("/moodtracking", async (req, res) => {
 });
 
 const documentsFields = upload.fields([
-  { name: "educationalCertificates" },
-  { name: "resume" },
-  { name: "governmentID" },
-  { name: "consentForm" },
-  { name: "specializationCertificates" },
-  { name: "profilePhoto" },
+  { name: "educationalCertificates", maxCount: 1 },
+  { name: "resume", maxCount: 1 },
+  { name: "governmentID", maxCount: 1 },
+  { name: "consentForm", maxCount: 1 },
+  { name: "specializationCertificates", maxCount: 1 },
+  { name: "profilePhoto", maxCount: 1 },
 ]);
 
 app.post("/registration", documentsFields, async (req, res) => {
@@ -205,8 +205,14 @@ app.post("/registration", documentsFields, async (req, res) => {
   }
 });
 
+const selfTestRoutes = require('./routes/selftest');
 
-//user login
+app.use('/api/selftest', selfTestRoutes);
+
+const selfTestRoutes = require('./routes/selftest');
+
+
+
 
 app.post("/login", async (req, res) => {
   const { email, password, userType } = req.body;
@@ -250,7 +256,23 @@ app.post("/login", async (req, res) => {
 // Start server
 const startServer = async () => {
   try {
-    await connectDB();
+    // Ensure we are connecting to MongoDB using the environment variable MONGODB_URI
+    const mongoUri = process.env.MONGODB_URI; // Get MongoDB URI from environment variable
+    if (!mongoUri) {
+      throw new Error("MongoDB URI is not defined in the environment variables.");
+    }
+
+    console.log('MongoDB URI:', mongoUri);
+
+    // Connect to MongoDB using Mongoose
+    await mongoose.connect(mongoUri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+
+    console.log('Mongoose connected to MongoDB');
+
+    // Start the server
     app.listen(PORT, () => {
       console.log(`Server is live at http://localhost:${PORT}`);
     });
