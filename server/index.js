@@ -1,13 +1,26 @@
 const express = require("express");
 const cors = require("cors");
 const multer = require("multer");
+<<<<<<< HEAD
 const bcrypt = require("bcrypt");
 const mongoose = require('mongoose');
 
+=======
+const mongoose = require("mongoose");
+>>>>>>> main
 const { connectDB, getDB } = require("./db");
+const Feedback = require("./Schema/Feedback");
+const MoodTracking = require("./models/moodTracking");
+const { Collection } = require("mongodb");
+
+console.log('Loading environment variables...');
+require("dotenv").config(); // Load environment variables from .env file
+console.log('MONGODB_URI:', process.env.MONGODB_URI);
+const bcrypt = require("bcrypt");
 
 const User = require("./models/registered");
 
+<<<<<<< HEAD
 const Feedback = require("./Schema/Feedback");
 const MoodTracking = require("./models/moodTracking");
 
@@ -16,8 +29,10 @@ const therapistRoutes = require('./therapistRoutes');  // Import therapist route
 
 require("dotenv").config();
 
+=======
+>>>>>>> main
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
 // Middleware
 app.use(cors());
@@ -62,18 +77,16 @@ app.post("/helpline", async (req, res) => {
     });
 
     if (result.insertedId) {
-      res.status(201).json({ 
+      res.status(201).json({
         success: true,
-        message: "Your message has been sent successfully" 
+        message: "Your message has been sent successfully"
       });
     } else {
       throw new Error("Failed to insert message");
     }
   } catch (error) {
-    console.error("Helpline message error:", error);
     res.status(500).json({
-      success: false,
-      message: error.message || "Failed to send message"
+      message: error.message
     });
   }
 });
@@ -93,9 +106,9 @@ app.post('/feedback', async (req, res) => {
     });
 
     if (result.insertedId) {
-      res.status(201).json({ 
+      res.status(201).json({
         success: true,
-        message: "Feedback submitted successfully" 
+        message: "Feedback submitted successfully"
       });
     } else {
       throw new Error("Failed to insert feedback");
@@ -117,10 +130,10 @@ app.get('/feedback', async (req, res) => {
       console.error("Database connection not established");
       return res.status(500).json({ success: false, message: "Database connection error" });
     }
-    
+
     const feedbackCollection = db.collection("Feedback");
     console.log("Feedback collection:", feedbackCollection);
-    
+
     const feedbackList = await feedbackCollection.find().toArray();
     console.log("Fetched feedback:", feedbackList.length, "items");
 
@@ -137,6 +150,7 @@ app.get('/feedback', async (req, res) => {
   }
 });
 
+// Mood tracking
 app.post("/moodtracking", async (req, res) => {
   try {
     const { userId, mood, distraction, result } = req.body;
@@ -171,12 +185,12 @@ app.get("/moodtracking", async (req, res) => {
 });
 
 const documentsFields = upload.fields([
-  { name: "educationalCertificates" },
-  { name: "resume" },
-  { name: "governmentID" },
-  { name: "consentForm" },
-  { name: "specializationCertificates" },
-  { name: "profilePhoto" },
+  { name: "educationalCertificates", maxCount: 1 },
+  { name: "resume", maxCount: 1 },
+  { name: "governmentID", maxCount: 1 },
+  { name: "consentForm", maxCount: 1 },
+  { name: "specializationCertificates", maxCount: 1 },
+  { name: "profilePhoto", maxCount: 1 },
 ]);
 
 app.post("/registration", documentsFields, async (req, res) => {
@@ -196,10 +210,10 @@ app.post("/registration", documentsFields, async (req, res) => {
       }
     }
 
-    const hashedPassword = await bcrypt.hash(formFields.password, 10);
+    // Store password as plain text (not recommended)
     const userData = {
       ...formFields,
-      password: hashedPassword, // hashed password
+      password: formFields.password,
       documents: { ...fileURLs },
     };
 
@@ -212,71 +226,75 @@ app.post("/registration", documentsFields, async (req, res) => {
   }
 });
 
+<<<<<<< HEAD
+=======
+const selfTestRoutes = require('./routes/selftest');
+
+app.use('/api/selftest', selfTestRoutes);
+
+
+//user login
+
+>>>>>>> main
 app.post("/login", async (req, res) => {
-  const { userType, email, password } = req.body;
+  const { email, password, userType } = req.body;
 
-  if (!userType || !email || !password) {
+  if (!email || !password || !userType) {
     return res.status(400).json({
-      message: "Missing required fields",
-      details: "userType, email, and password are required"
-    });
-  }
-
-  if (!['patient', 'psychologist', 'admin'].includes(userType)) {
-    return res.status(400).json({
-      message: "Invalid user type",
-      details: "User type must be patient, psychologist, or admin"
+      message: "Please provide email, password, and user type",
     });
   }
 
   try {
-    const user = await User.findOne({ email, userType });
+    const db = getDB();
+    const usersCollection = db.collection("users");
+
+    const user = await usersCollection.findOne({ email });
 
     if (!user) {
-      return res.status(400).json({
-        message: "User not found or user type mismatch.",
-        details: "Please check your credentials and try again."
-      });
+      return res.status(404).json({ message: "User not found" });
     }
 
-    if (!user.password || typeof user.password !== 'string') {
-      return res.status(500).json({
-        message: "User password is invalid",
-        details: "Stored password is missing or not a string"
-      });
+    if (user.confirmPassword !== password) {
+      return res.status(401).json({ message: "Incorrect password" });
     }
 
-    const passwordMatch = await bcrypt.compare(password, user.password);
-    if (!passwordMatch) {
-      return res.status(401).json({
-        message: "Invalid credentials",
-        details: "The password you entered is incorrect."
-      });
+    if (user.userType !== userType) {
+      return res.status(403).json({ message: "Invalid user type" });
     }
 
-    const { password: _, ...userData } = user.toObject();
-    res.status(200).json({
+    const { password: _, ...userWithoutPassword } = user;
+
+    return res.status(200).json({
       message: "Login successful",
-      user: userData
+      user: userWithoutPassword
     });
+
   } catch (error) {
-    console.error("Login error details:", {
-      message: error.message,
-      stack: error.stack,
-      requestBody: req.body
-    });
-    res.status(500).json({
-      message: "Login failed",
-      details: error.message || "An unexpected error occurred. Please try again later.",
-      errorType: error.name
-    });
+    console.error("Login error:", error);
+    res.status(500).json({ message: "Internal server error", error: error.message });
   }
 });
-
 // Start server
 const startServer = async () => {
   try {
-    await connectDB();
+    // Ensure we are connecting to MongoDB using the environment variable MONGODB_URI
+    const mongoUri = process.env.MONGODB_URI; // Get MongoDB URI from environment variable
+    if (!mongoUri) {
+      throw new Error("MongoDB URI is not defined in the environment variables.");
+    }
+
+    console.log('MongoDB URI:', mongoUri);
+
+    // Connect to MongoDB using Mongoose
+    await mongoose.connect(mongoUri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+
+    console.log('Mongoose connected to MongoDB');
+
+    // Start the server
     app.listen(PORT, () => {
       console.log(`Server is live at http://localhost:${PORT}`);
     });

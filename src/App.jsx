@@ -59,8 +59,7 @@ function App() {
         <Route path="/Books" element={<Books />} /> 
         <Route path="/Feedback" element={<Feedback />} />
         <Route path="/" element={<Home />} />
-        <Route path="/AboutUs" element={<AboutUs />} />
-        <Route path="/AppointmentForm" element={<AppointmentForm />} />
+        <Route path="/AboutUs" element={<AboutUs />} />        <Route path="/AppointmentForm" element={<AppointmentForm />} />
         <Route path="/ActivitySection" element={<ActivitySection />} />
         <Route path="/HistorySection" element={<HistorySection />} />
         <Route path="/ProfileSettings" element={<ProfileSettings />} />
