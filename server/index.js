@@ -1,45 +1,34 @@
 const express = require("express");
 const cors = require("cors");
 const multer = require("multer");
-<<<<<<< HEAD
 const bcrypt = require("bcrypt");
 const mongoose = require('mongoose');
 
-=======
-const mongoose = require("mongoose");
->>>>>>> main
 const { connectDB, getDB } = require("./db");
 const Feedback = require("./Schema/Feedback");
 const MoodTracking = require("./models/moodTracking");
+const selfTestRoutes = require("./routes/selftest");
 const { Collection } = require("mongodb");
 
-console.log('Loading environment variables...');
+console.log("Loading environment variables...");
 require("dotenv").config(); // Load environment variables from .env file
-console.log('MONGODB_URI:', process.env.MONGODB_URI);
-const bcrypt = require("bcrypt");
+console.log("MONGODB_URI:", process.env.MONGODB_URI);
 
 const User = require("./models/registered");
 
-<<<<<<< HEAD
-const Feedback = require("./Schema/Feedback");
-const MoodTracking = require("./models/moodTracking");
-
 const therapistRoutes = require('./therapistRoutes');  // Import therapist routes
 
-
-require("dotenv").config();
-
-=======
->>>>>>> main
 const app = express();
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static("uploads"));
-app.use(therapistRoutes);
+
+// Use therapist routes under '/api'
+app.use('/api', therapistRoutes);
 
 // Set up multer for file handling
 const storage = multer.diskStorage({
@@ -58,9 +47,6 @@ app.get("/", (req, res) => {
   res.send("MindWell API is running...");
 });
 
-// Add this line to use therapist routes at '/api'
-app.use('/api', therapistRoutes);  // <-- Added therapist routes under '/api'
-
 // Helpline message endpoint
 app.post("/helpline", async (req, res) => {
   try {
@@ -73,26 +59,26 @@ app.post("/helpline", async (req, res) => {
       email,
       subject,
       message,
-      createdAt: new Date()
+      createdAt: new Date(),
     });
 
     if (result.insertedId) {
       res.status(201).json({
         success: true,
-        message: "Your message has been sent successfully"
+        message: "Your message has been sent successfully",
       });
     } else {
       throw new Error("Failed to insert message");
     }
   } catch (error) {
     res.status(500).json({
-      message: error.message
+      message: error.message,
     });
   }
 });
 
 // Feedback endpoints
-app.post('/feedback', async (req, res) => {
+app.post("/feedback", async (req, res) => {
   try {
     const { name, category, message } = req.body;
     const db = getDB();
@@ -102,13 +88,13 @@ app.post('/feedback', async (req, res) => {
       name,
       category,
       message,
-      createdAt: new Date()
+      createdAt: new Date(),
     });
 
     if (result.insertedId) {
       res.status(201).json({
         success: true,
-        message: "Feedback submitted successfully"
+        message: "Feedback submitted successfully",
       });
     } else {
       throw new Error("Failed to insert feedback");
@@ -117,18 +103,20 @@ app.post('/feedback', async (req, res) => {
     console.error("Feedback submission error:", error);
     res.status(500).json({
       success: false,
-      message: error.message || "Failed to submit feedback"
+      message: error.message || "Failed to submit feedback",
     });
   }
 });
 
-app.get('/feedback', async (req, res) => {
+app.get("/feedback", async (req, res) => {
   try {
     console.log("Attempting to fetch feedback...");
     const db = getDB();
     if (!db) {
       console.error("Database connection not established");
-      return res.status(500).json({ success: false, message: "Database connection error" });
+      return res
+        .status(500)
+        .json({ success: false, message: "Database connection error" });
     }
 
     const feedbackCollection = db.collection("Feedback");
@@ -139,13 +127,13 @@ app.get('/feedback', async (req, res) => {
 
     res.status(200).json({
       success: true,
-      feedback: feedbackList
+      feedback: feedbackList,
     });
   } catch (error) {
     console.error("Error fetching feedback:", error);
     res.status(500).json({
       success: false,
-      message: error.message || "Failed to fetch feedback"
+      message: error.message || "Failed to fetch feedback",
     });
   }
 });
@@ -176,7 +164,9 @@ app.post("/moodtracking", async (req, res) => {
 
 app.get("/moodtracking", async (req, res) => {
   try {
-    const entries = await MoodTracking.find().sort({ recordedAt: -1 }).limit(20);
+    const entries = await MoodTracking.find()
+      .sort({ recordedAt: -1 })
+      .limit(20);
     res.status(200).json(entries);
   } catch (error) {
     console.error("Error fetching mood tracking data:", error);
@@ -226,53 +216,48 @@ app.post("/registration", documentsFields, async (req, res) => {
   }
 });
 
-<<<<<<< HEAD
-=======
-const selfTestRoutes = require('./routes/selftest');
-
 app.use('/api/selftest', selfTestRoutes);
-
 
 //user login
 
->>>>>>> main
 app.post("/login", async (req, res) => {
-  const { email, password, userType } = req.body;
-
-  if (!email || !password || !userType) {
-    return res.status(400).json({
-      message: "Please provide email, password, and user type",
-    });
-  }
-
   try {
-    const db = getDB();
-    const usersCollection = db.collection("users");
+    const { userType, email, password } = req.body;
 
-    const user = await usersCollection.findOne({ email });
+    if (!userType || !email || !password) {
+      return res.status(400).json({
+        message: "Please provide email, password, and user type",
+      });
+    }
+
+    // Use Mongoose to find the user
+    const user = await User.findOne({ email, userType });
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    if (user.confirmPassword !== password) {
+    // Match the plain password (consider hashing in production)
+    const passwordMatch = await bcrypt.compare(password, user.password);
+
+    if (!passwordMatch) {
       return res.status(401).json({ message: "Incorrect password" });
     }
 
-    if (user.userType !== userType) {
-      return res.status(403).json({ message: "Invalid user type" });
-    }
+    // Remove sensitive data before returning
+    const { password: _, ...userData } = user.toObject();
 
-    const { password: _, ...userWithoutPassword } = user;
-
-    return res.status(200).json({
+    res.status(200).json({
       message: "Login successful",
-      user: userWithoutPassword
+      user: userData,
     });
 
   } catch (error) {
     console.error("Login error:", error);
-    res.status(500).json({ message: "Internal server error", error: error.message });
+    res.status(500).json({
+      message: "Internal server error",
+      error: error.message,
+    });
   }
 });
 // Start server
@@ -281,10 +266,12 @@ const startServer = async () => {
     // Ensure we are connecting to MongoDB using the environment variable MONGODB_URI
     const mongoUri = process.env.MONGODB_URI; // Get MongoDB URI from environment variable
     if (!mongoUri) {
-      throw new Error("MongoDB URI is not defined in the environment variables.");
+      throw new Error(
+        "MongoDB URI is not defined in the environment variables."
+      );
     }
 
-    console.log('MongoDB URI:', mongoUri);
+    console.log("MongoDB URI:", mongoUri);
 
     // Connect to MongoDB using Mongoose
     await mongoose.connect(mongoUri, {
@@ -292,7 +279,7 @@ const startServer = async () => {
       useUnifiedTopology: true,
     });
 
-    console.log('Mongoose connected to MongoDB');
+    console.log("Mongoose connected to MongoDB");
 
     // Start the server
     app.listen(PORT, () => {

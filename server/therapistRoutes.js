@@ -1,17 +1,38 @@
 const express = require('express');
 const router = express.Router();
-const Therapist = require('./models/therapist');
+const User = require('./models/user');
 
 // Debug route for testing
-router.get('/api/therapists', async (req, res) => {
+router.get('/therapists', async (req, res) => {
   try {
     console.log("Fetching therapists...");
-    const therapists = await Therapist.find();
+    const therapists = await User.find({
+      userType: { $regex: /^(psychologist|therapist)$/i }
+    });
     console.log("Therapists fetched successfully:", therapists);
     res.json(therapists);
   } catch (error) {
     console.error("Error fetching therapists:", error);
     res.status(500).json({ message: "Failed to fetch therapists", error: error.message });
+  }
+});
+
+// New route to get therapist by ID
+router.get('/therapists/:id', async (req, res) => {
+  try {
+    const therapist = await User.findOne({
+      _id: req.params.id,
+      userType: { $regex: /^(psychologist|therapist)$/i }
+    });
+
+    if (!therapist) {
+      return res.status(404).json({ message: "Therapist not found" });
+    }
+
+    res.json(therapist);
+  } catch (error) {
+    console.error("Error fetching therapist by ID:", error);
+    res.status(500).json({ message: "Failed to fetch therapist", error: error.message });
   }
 });
 

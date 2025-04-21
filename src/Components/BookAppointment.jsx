@@ -21,7 +21,14 @@ const BookAppointment = () => {
   }, []);
 
   const handleTherapistClick = (id) => {
-    navigate(`/consultant/${id}`);
+    const user = localStorage.getItem('user');
+    if (user) {
+      // User is logged in, navigate to consultant profile
+      navigate(`/consultant/${id}`);
+    } else {
+      // User not logged in, navigate to login and pass redirect state
+      navigate('/login', { state: { from: `/consultant/${id}` } });
+    }
   };
 
   const filteredTherapists = therapists.filter((t) =>
