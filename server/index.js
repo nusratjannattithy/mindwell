@@ -1,8 +1,9 @@
 const express = require("express");
 const cors = require("cors");
 const multer = require("multer");
-const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+const mongoose = require('mongoose');
+
 const { connectDB, getDB } = require("./db");
 const Feedback = require("./Schema/Feedback");
 const MoodTracking = require("./models/moodTracking");
@@ -15,6 +16,8 @@ console.log("MONGODB_URI:", process.env.MONGODB_URI);
 
 const User = require("./models/registered");
 
+const therapistRoutes = require('./therapistRoutes');  // Import therapist routes
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -23,6 +26,9 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static("uploads"));
+
+// Use therapist routes under '/api'
+app.use('/api', therapistRoutes);
 
 // Set up multer for file handling
 const storage = multer.diskStorage({
@@ -209,6 +215,10 @@ app.post("/registration", documentsFields, async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
+
+app.use('/api/selftest', selfTestRoutes);
+
+//user login
 
 app.post("/login", async (req, res) => {
   try {
