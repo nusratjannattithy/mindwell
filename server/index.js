@@ -1,10 +1,18 @@
 const express = require("express");
 const cors = require("cors");
 const multer = require("multer");
-const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+
 const path = require("path");
 const dotenv = require("dotenv");
+const mongoose = require('mongoose');
+
+const { connectDB, getDB } = require("./db");
+const Feedback = require("./Schema/Feedback");
+const MoodTracking = require("./models/moodTracking");
+const selfTestRoutes = require("./routes/selftest");
+const { Collection } = require("mongodb");
+
 
 // Load environment variables from .env file
 dotenv.config();
@@ -17,6 +25,8 @@ const MoodTracking = require("./models/moodTracking");
 const selfTestRoutes = require("./routes/selftest");
 const consultantRoutes = require("./routes/consultantRoutes");
 
+const therapistRoutes = require('./therapistRoutes');  // Import therapist routes
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -27,6 +37,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static("uploads"));
 
 // === File Upload Configuration ===
+// Use therapist routes under '/api'
+app.use('/api', therapistRoutes);
+
+// Set up multer for file handling
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads/");
@@ -170,6 +184,10 @@ app.post("/registration", documentsFields, async (req, res) => {
 });
 
 // Login Route
+app.use('/api/selftest', selfTestRoutes);
+
+//user login
+
 app.post("/login", async (req, res) => {
   try {
     const { userType, email, password } = req.body;
@@ -215,8 +233,5 @@ const startServer = async () => {
     process.exit(1);
   }
 };
-
-
-
 
 startServer();
