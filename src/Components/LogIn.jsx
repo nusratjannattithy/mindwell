@@ -47,6 +47,7 @@ const LogIn = () => {
           console.log(`${userType} logged in`, data.user);
 
           if (userType === 'therapist') {
+            localStorage.setItem("userEmail", data.user.email); // ✅ Correct value from response
             navigate('/Consultdashboard');
           } else {
             navigate('/dashboard');
