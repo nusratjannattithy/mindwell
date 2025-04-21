@@ -9,7 +9,6 @@ const MoodTracking = require("./models/moodTracking");
 const selfTestRoutes = require("./routes/selftest");
 const { Collection } = require("mongodb");
 
-console.log("Loading environment variables...");
 require("dotenv").config(); // Load environment variables from .env file
 console.log("MONGODB_URI:", process.env.MONGODB_URI);
 
@@ -23,6 +22,8 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static("uploads"));
+
+
 
 // Set up multer for file handling
 const storage = multer.diskStorage({
@@ -177,6 +178,8 @@ const documentsFields = upload.fields([
   { name: "profilePhoto", maxCount: 1 },
 ]);
 
+// registration code
+
 app.post("/registration", documentsFields, async (req, res) => {
   try {
     const db = getDB();
@@ -250,6 +253,12 @@ app.post("/login", async (req, res) => {
     });
   }
 });
+
+//Admin Components Routes 
+const userRoutes = require("./routes/userRoutes");
+app.use("/users", userRoutes);
+
+
 // Start server
 const startServer = async () => {
   try {
