@@ -2,8 +2,10 @@
 import React, { useState } from 'react';
 
 
+
 import { Link, useNavigate } from 'react-router-dom';
 
+import { useLocation } from 'react-router-dom';
 
 const LogIn = () => {
   const [email, setEmail] = useState('');
@@ -11,6 +13,7 @@ const LogIn = () => {
   const [userType, setUserType] = useState('patient'); // default user type
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
 
 
   const handleSubmit = async (e) => {
@@ -36,13 +39,14 @@ const LogIn = () => {
     } else {
       // For therapist and patient login using backend
       try {
+        console.log("Logging in with:", { userType, email, password}); // Log request data
         console.log("Logging in with:", { userType, email, password }); // Log request data
         const response = await fetch('http://localhost:5000/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ userType, email, password })
+          body: JSON.stringify({ userType, email, password})
         });
 
 
@@ -58,13 +62,26 @@ const LogIn = () => {
 
 
           if (userType === 'therapist') {
+            localStorage.setItem("userEmail", data.user.email); // ✅ Correct value from response
             navigate('/Consultdashboard');
+          // Store user data in localStorage
+          localStorage.setItem('user', JSON.stringify(data.user));
+
+          // Check for redirect path from location state
+          const redirectPath = location.state?.from;
+
+          if (redirectPath) {
+            navigate(redirectPath);
           } else {
-            navigate('/dashboard');
+            if (userType === 'therapist') {
+              navigate('/Consultdashboard');
+            } else {
+              navigate('/dashboard');
+            }
           }
         }
       } catch (err) {
-        console.error(err);
+      console.error(err);
         setError('Something went wrong. Please try again.');
       }
     }
@@ -145,7 +162,7 @@ const LogIn = () => {
 
           <div className="text-center mt-4">
             <p className="text-sm text-gray-600">
-              Don't have an Account?
+              Don't have an Account? 
               <Link to="/Registration" className="ml-1 text-blue-500 hover:text-blue-600 font-semibold transition">
                 Create account
               </Link>

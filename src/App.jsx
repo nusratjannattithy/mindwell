@@ -27,6 +27,7 @@ import ProfileSettings from './Components/ProfileSettings';
 import ConsultantProfile from './Components/ConsultantProfile';
 import AdminDashboard from './Components/AdminDashboard';
 import Admin from './Pages/Admin';
+import ConsultantDashboard from './Components/ConsultantDashboard';
 
 
 
@@ -56,11 +57,11 @@ function App() {
         <Route path="/Articles" element={<Articles />} />
         <Route path="/Books" element={<Books />} />
         <Route path="/dashboard" element={<PatientDashboard />} />
+        <Route path="/Consultdashboard" element={<ConsultantDashboard/>} />
         <Route path="/Books" element={<Books />} /> 
         <Route path="/Feedback" element={<Feedback />} />
         <Route path="/" element={<Home />} />
-        <Route path="/AboutUs" element={<AboutUs />} />
-        <Route path="/AppointmentForm" element={<AppointmentForm />} />
+        <Route path="/AboutUs" element={<AboutUs />} />        <Route path="/AppointmentForm" element={<AppointmentForm />} />
         <Route path="/ActivitySection" element={<ActivitySection />} />
         <Route path="/HistorySection" element={<HistorySection />} />
         <Route path="/ProfileSettings" element={<ProfileSettings />} />
