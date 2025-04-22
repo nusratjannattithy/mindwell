@@ -282,8 +282,17 @@ const startServer = async () => {
     console.log("Mongoose connected to MongoDB");
 
     // Start the server
-    app.listen(PORT, () => {
+    const server = app.listen(PORT, () => {
       console.log(`Server is live at http://localhost:${PORT}`);
+    });
+
+    server.on('error', (error) => {
+      if (error.code === 'EADDRINUSE') {
+        console.error(`Port ${PORT} is already in use. Please free the port or use a different one.`);
+        process.exit(1);
+      } else {
+        console.error('Server error:', error);
+      }
     });
   } catch (err) {
     console.error("Server failed to start:", err.message);

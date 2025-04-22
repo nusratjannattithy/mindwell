@@ -9,6 +9,36 @@ const ConsultantProfile = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  const handleBookNowClick = () => {
+    console.log('Book Now clicked');
+    try {
+      const user = localStorage.getItem('user');
+      if (!user) {
+        console.log('User not logged in, redirecting to login');
+        navigate('/login', { state: { from: `/consultant/${id}` } });
+      } else {
+        console.log('Proceed to booking for consultant', id);
+      }
+    } catch (error) {
+      console.error('Error in Book Now click handler:', error);
+    }
+  };
+
+  const handleMessageClick = () => {
+    console.log('Message clicked');
+    try {
+      const user = localStorage.getItem('user');
+      if (!user) {
+        console.log('User not logged in, redirecting to login');
+        navigate('/login', { state: { from: `/consultant/${id}` } });
+      } else {
+        console.log('Proceed to message consultant', id);
+      }
+    } catch (error) {
+      console.error('Error in Message click handler:', error);
+    }
+  };
+
   useEffect(() => {
     const fetchConsultant = async () => {
       try {
@@ -117,11 +147,29 @@ const ConsultantProfile = () => {
         <button className="bg-purple-600 text-white px-6 py-2 rounded-full shadow-md hover:bg-purple-700">
           Attachments
         </button>
-        <button className="bg-green-600 text-white px-6 py-2 rounded-full shadow-md hover:bg-green-700">
+        <button
+          type="button"
+          className="bg-green-600 text-white px-6 py-2 rounded-full shadow-md hover:bg-green-700"
+          onClick={handleBookNowClick}
+        >
           Book Now
         </button>
-        <button className="bg-blue-600 text-white px-6 py-2 rounded-full shadow-md hover:bg-blue-700">
+        <button
+          type="button"
+          className="bg-blue-600 text-white px-6 py-2 rounded-full shadow-md hover:bg-blue-700"
+          onClick={handleMessageClick}
+        >
           Message
+        </button>
+        <button
+          type="button"
+          className="bg-red-600 text-white px-6 py-2 rounded-full shadow-md hover:bg-red-700"
+          onClick={() => {
+            console.log('Test Login Redirect clicked');
+            navigate('/login', { state: { from: `/consultant/${id}` } });
+          }}
+        >
+          Test Login Redirect
         </button>
       </div>
     </div>
@@ -129,4 +177,3 @@ const ConsultantProfile = () => {
 };
 
 export default ConsultantProfile;
-  

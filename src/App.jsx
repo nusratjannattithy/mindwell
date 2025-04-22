@@ -24,10 +24,11 @@ import AppointmentForm from './Components/AppointmentForm';
 import ActivitySection from './Components/ActivitySection';
 import HistorySection from './Components/HistorySection';
 import ProfileSettings from './Components/ProfileSettings';
-import ConsultantProfile from './Components/ConsultantProfile';
+import ConsultantProfile  from './Components/ConsultantProfile';
 import AdminDashboard from './Components/AdminDashboard';
 import Admin from './Pages/Admin';
 import ConsultantDashboard from './Components/ConsultantDashboard';
+import NotFound from './Components/NotFound';
 
 
 
@@ -40,39 +41,38 @@ function App() {
       <Navbar />
 
       {/* Define Routes for Navigation */}
-      <Routes>
-        {/* Define different routes for different components */}
-       
-        <Route path="/resources" element={<Resources />} />
-        <Route path="/login" element={<LogIn />} />
-        <Route path="/Registration" element={<Registration/>} />
-        <Route path="/assessment" element={<SelfTest />} />
-        <Route path="/options" element={<OptionsPage />} />
-        <Route path="/book-appointment" element={<BookAppointment />} />
-        <Route path="/MoodTracking" element={<MoodTracking/>} />
-        <Route path="/MoodEnhancement" element={<MoodEnhancement/>} />
-        <Route path="/Helpline" element={<Helpline />} />
-        <Route path="/blog" element={<BlogList />} />
-        <Route path="/blog/:id" element={<BlogDetail />} />
-        <Route path="/Articles" element={<Articles />} />
-        <Route path="/Books" element={<Books />} />
-        <Route path="/dashboard" element={<PatientDashboard />} />
-        <Route path="/Consultdashboard" element={<ConsultantDashboard/>} />
-        <Route path="/Books" element={<Books />} /> 
-        <Route path="/Feedback" element={<Feedback />} />
-        <Route path="/" element={<Home />} />
-        <Route path="/AboutUs" element={<AboutUs />} />        <Route path="/AppointmentForm" element={<AppointmentForm />} />
-        <Route path="/ActivitySection" element={<ActivitySection />} />
-        <Route path="/HistorySection" element={<HistorySection />} />
-        <Route path="/ProfileSettings" element={<ProfileSettings />} />
-        <Route path="/consultant/:id" element={<ConsultantProfile />} />
-        <Route path="/Admin" element ={<Admin/>}/>
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
-        
-        
-       
-        
-      </Routes>
+        <Routes>
+          {/* Define different routes for different components */}
+         
+          <Route path="/resources" element={<Resources />} />
+          <Route path="/login" element={<LogIn />} />
+          <Route path="/registration" element={<Registration/>} />
+          <Route path="/assessment" element={<SelfTest />} />
+          <Route path="/options" element={<OptionsPage />} />
+          <Route path="/book-appointment" element={<BookAppointment />} />
+          <Route path="/moodtracking" element={<MoodTracking/>} />
+          <Route path="/moodenhancement" element={<MoodEnhancement/>} />
+          <Route path="/helpline" element={<Helpline />} />
+          <Route path="/blog" element={<BlogList />} />
+          <Route path="/blog/:id" element={<BlogDetail />} />
+          <Route path="/articles" element={<Articles />} />
+          <Route path="/books" element={<Books />} />
+          <Route path="/dashboard" element={<PatientDashboard />} />
+          <Route path="/consultdashboard" element={<ConsultantDashboard/>} />
+          <Route path="/books" element={<Books />} /> 
+          <Route path="/feedback" element={<Feedback />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/aboutus" element={<AboutUs />} />        <Route path="/appointmentform" element={<AppointmentForm />} />
+          <Route path="/activitysection" element={<ActivitySection />} />
+          <Route path="/historysection" element={<HistorySection />} />
+          <Route path="/profilesettings" element={<ProfileSettings />} />
+          <Route path="/consultant/:id" element={<ConsultantProfile />} />
+          <Route path="/admin" element ={<Admin/>}/>
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          
+          <Route path="*" element={<NotFound />} />
+
+        </Routes>
 
       {/* Footer is displayed on all pages */}
       <Footer />
