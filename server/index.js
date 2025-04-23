@@ -10,6 +10,8 @@ const MoodTracking = require("./models/moodTracking");
 const selfTestRoutes = require("./routes/selftest");
 const { Collection } = require("mongodb");
 
+const appointmentRoutes = require('./routes/appointments');  // Import appointment routes
+
 console.log("Loading environment variables...");
 require("dotenv").config(); // Load environment variables from .env file
 console.log("MONGODB_URI:", process.env.MONGODB_URI);
@@ -19,7 +21,7 @@ const User = require("./models/registered");
 const therapistRoutes = require('./therapistRoutes');  // Import therapist routes
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000; // Use fixed port 5000 for backend
 
 // Middleware
 app.use(cors());
@@ -217,6 +219,8 @@ app.post("/registration", documentsFields, async (req, res) => {
 });
 
 app.use('/api/selftest', selfTestRoutes);
+
+app.use('/api/appointments', appointmentRoutes);
 
 //user login
 

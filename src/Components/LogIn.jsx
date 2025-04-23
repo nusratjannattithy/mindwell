@@ -56,7 +56,12 @@ const LogIn = () => {
           const redirectPath = location.state?.from;
 
           if (redirectPath) {
-            navigate(redirectPath);
+            // Add showAppointmentForm flag to redirect state if coming from consultant booking
+            if (redirectPath.startsWith('/consultant/')) {
+              navigate(redirectPath, { state: { showAppointmentForm: true } });
+            } else {
+              navigate(redirectPath);
+            }
           } else {
             if (userType === 'therapist') {
               navigate('/Consultdashboard');
