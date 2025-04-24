@@ -1,4 +1,4 @@
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+     import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import AppointmentForm from './AppointmentForm';
@@ -11,11 +11,14 @@ const ConsultantProfile = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [showAppointmentForm, setShowAppointmentForm] = useState(false);
+  const [showDocuments, setShowDocuments] = useState(false);
 
   useEffect(() => {
-    // Check if redirected from login with flag to show appointment form
+    // Check if redirected from login with flag to show appointment form or show attachments
     if (location.state?.showAppointmentForm) {
       setShowAppointmentForm(true);
+    } else if (location.state?.showAttachments) {
+      setShowDocuments(true);
     }
   }, [location.state]);
 
@@ -27,6 +30,11 @@ const ConsultantProfile = () => {
     } catch (error) {
       console.error('Error in Book Now click handler:', error);
     }
+  };
+
+  const handleAttachmentsClick = () => {
+    // Always navigate to login page first with state to show attachments after login
+    navigate('/login', { state: { from: `/consultant/${id}`, showAppointmentForm: false, showAttachments: true } });
   };
 
   useEffect(() => {
@@ -138,7 +146,10 @@ const ConsultantProfile = () => {
 
       {/* Buttons */}
       <div className="mt-8 flex flex-wrap justify-center gap-6">
-        <button className="bg-purple-600 text-white px-6 py-2 rounded-full shadow-md hover:bg-purple-700">
+        <button
+          className="bg-purple-600 text-white px-6 py-2 rounded-full shadow-md hover:bg-purple-700"
+          onClick={handleAttachmentsClick}
+        >
           Attachments
         </button>
         <button
@@ -149,7 +160,95 @@ const ConsultantProfile = () => {
           Book Now
         </button>
       </div>
+
+  {showDocuments && (
+    <div className="mt-8 p-6 bg-gray-50 rounded-lg shadow-inner max-w-5xl mx-auto">
+      <h3 className="text-2xl font-semibold mb-4 text-center text-gray-700">Other Documents</h3>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {consultant.educationalCertificates && consultant.educationalCertificates.length > 0 ? (
+          <div>
+            <h4 className="text-xl font-semibold mb-2">Educational Certificates</h4>
+            {consultant.educationalCertificates.map((cert, index) => (
+              <img
+                key={index}
+                src={cert}
+                alt={`Educational Certificate ${index + 1}`}
+                className="w-full h-48 object-cover rounded-md mb-4 border"
+              />
+            ))}
+          </div>
+        ) : (
+          <p className="text-gray-500">No educational certificates available.</p>
+        )}
+
+        {consultant.specializationCertificates && consultant.specializationCertificates.length > 0 ? (
+          <div>
+            <h4 className="text-xl font-semibold mb-2">Specialization Certificates</h4>
+            {consultant.specializationCertificates.map((cert, index) => (
+              <img
+                key={index}
+                src={cert}
+                alt={`Specialization Certificate ${index + 1}`}
+                className="w-full h-48 object-cover rounded-md mb-4 border"
+              />
+            ))}
+          </div>
+        ) : (
+          <p className="text-gray-500">No specialization certificates available.</p>
+        )}
+
+        {consultant.certificates && consultant.certificates.length > 0 ? (
+          <div>
+            <h4 className="text-xl font-semibold mb-2">Certificates</h4>
+            {consultant.certificates.map((cert, index) => (
+              <img
+                key={index}
+                src={cert}
+                alt={`Certificate ${index + 1}`}
+                className="w-full h-48 object-cover rounded-md mb-4 border"
+              />
+            ))}
+          </div>
+        ) : (
+          <p className="text-gray-500">No certificates available.</p>
+        )}
+
+        {consultant.documents?.resume ? (
+          <div>
+            <h4 className="text-xl font-semibold mb-2">Resume</h4>
+            <a href={consultant.documents.resume} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+              View Resume
+            </a>
+          </div>
+        ) : (
+          <p className="text-gray-500">No resume available.</p>
+        )}
+
+        {consultant.documents?.governmentID ? (
+          <div>
+            <h4 className="text-xl font-semibold mb-2">Government ID</h4>
+            <a href={consultant.documents.governmentID} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+              View Government ID
+            </a>
+          </div>
+        ) : (
+          <p className="text-gray-500">No government ID available.</p>
+        )}
+
+        {consultant.documents?.consentForm ? (
+          <div>
+            <h4 className="text-xl font-semibold mb-2">Consent Form</h4>
+            <a href={consultant.documents.consentForm} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+              View Consent Form
+            </a>
+          </div>
+        ) : (
+          <p className="text-gray-500">No consent form available.</p>
+        )}
+      </div>
     </div>
+  )}
+  </div>
   );
 };
 
