@@ -13,10 +13,14 @@ const MoodTracking = require("./models/moodTracking");
 const selfTestRoutes = require("./routes/selftest");
 const { Collection } = require("mongodb");
 
+const dotenv = require("dotenv");
+const appointmentRoutes = require('./routes/appointments');  // Import appointment routes
 
-// Load environment variables from .env file
-dotenv.config();
+console.log("Loading environment variables...");
+dotenv.config(); // Load environment variables from .env file
+
 console.log("MONGODB_URI:", process.env.MONGODB_URI);
+
 
 const { connectDB, getDB } = require("./db");
 const User = require("./models/registered");
@@ -28,7 +32,7 @@ const consultantRoutes = require("./routes/consultantRoutes");
 const therapistRoutes = require('./therapistRoutes');  // Import therapist routes
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000; // Use fixed port 5000 for backend
 
 // === Middleware ===
 app.use(cors());
@@ -186,6 +190,8 @@ app.post("/registration", documentsFields, async (req, res) => {
 // Login Route
 app.use('/api/selftest', selfTestRoutes);
 
+app.use('/api/appointments', appointmentRoutes);
+
 //user login
 
 app.post("/login", async (req, res) => {
@@ -225,8 +231,20 @@ const startServer = async () => {
     });
 
     console.log("Mongoose connected to MongoDB");
+
+    // Start the server
+    const server = app.listen(PORT, () => {
     app.listen(PORT, () => {
       console.log(`Server is live at http://localhost:${PORT}`);
+    });
+
+    server.on('error', (error) => {
+      if (error.code === 'EADDRINUSE') {
+        console.error(`Port ${PORT} is already in use. Please free the port or use a different one.`);
+        process.exit(1);
+      } else {
+        console.error('Server error:', error);
+      }
     });
   } catch (err) {
     console.error("Server failed to start:", err.message);
