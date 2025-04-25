@@ -71,9 +71,13 @@ const LogIn = () => {
           const redirectPath = location.state?.from;
 
           if (redirectPath) {
-            // Add showAppointmentForm flag to redirect state if coming from consultant booking
+            // Add showAttachments flag to redirect state if coming from consultant page with showAttachments
             if (redirectPath.startsWith('/consultant/')) {
-              navigate(redirectPath, { state: { showAppointmentForm: true } });
+              if (location.state?.showAttachments) {
+                navigate(redirectPath, { state: { showAttachments: true } });
+              } else {
+                navigate(redirectPath, { state: { showAppointmentForm: true } });
+              }
             } else {
               navigate(redirectPath);
             }
