@@ -24,6 +24,7 @@ import AppointmentForm from './Components/AppointmentForm';
 import ActivitySection from './Components/ActivitySection';
 import HistorySection from './Components/HistorySection';
 import ProfileSettings from './Components/ProfileSettings';
+
 import ConsultantProfile  from './Components/ConsultantProfile';
 import AdminDashboard from './Components/AdminDashboard';
 import Admin from './Pages/Admin';
@@ -41,6 +42,7 @@ function App() {
       <Navbar />
 
       {/* Define Routes for Navigation */}
+
         <Routes>
           {/* Define different routes for different components */}
          
@@ -74,7 +76,9 @@ function App() {
 
         </Routes>
 
+
       {/* Footer is displayed on all pages */}
+     
       <Footer />
     </>
   );

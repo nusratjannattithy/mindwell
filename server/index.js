@@ -13,6 +13,9 @@ const MoodTracking = require("./models/moodTracking");
 const selfTestRoutes = require("./routes/selftest");
 const { Collection } = require("mongodb");
 
+
+require("dotenv").config(); // Load environment variables from .env file
+
 const dotenv = require("dotenv");
 const appointmentRoutes = require('./routes/appointments');  // Import appointment routes
 
@@ -23,6 +26,7 @@ console.log("MONGODB_URI:", process.env.MONGODB_URI);
 
 
 const { connectDB, getDB } = require("./db");
+
 const User = require("./models/registered");
 const Feedback = require("./Schema/Feedback");
 const MoodTracking = require("./models/moodTracking");
@@ -43,6 +47,7 @@ app.use("/uploads", express.static("uploads"));
 // === File Upload Configuration ===
 // Use therapist routes under '/api'
 app.use('/api', therapistRoutes);
+
 
 // Set up multer for file handling
 const storage = multer.diskStorage({
@@ -69,7 +74,21 @@ app.get("/", (req, res) => {
   res.send("MindWell API is running...");
 });
 
+
+// Documents for reg
+const documentsFields = upload.fields([
+  { name: "educationalCertificates", maxCount: 1 },
+  { name: "resume", maxCount: 1 },
+  { name: "governmentID", maxCount: 1 },
+  { name: "consentForm", maxCount: 1 },
+  { name: "specializationCertificates", maxCount: 1 },
+  { name: "profilePhoto", maxCount: 1 },
+]);
+
+
+
 // Helpline Message
+
 app.post("/helpline", async (req, res) => {
   try {
     const { name, email, subject, message } = req.body;
@@ -153,14 +172,28 @@ app.get("/moodtracking", async (req, res) => {
 });
 
 // Registration Route with File Uploads and Password Hashing
+
 app.post("/registration", documentsFields, async (req, res) => {
   try {
+    // Check if files are uploaded
+    if (!req.files) {
+      return res.status(400).json({ message: "No files uploaded" });
+    }
+
     const db = getDB();
+    if (!db) {
+      return res.status(500).json({ message: "Database connection failed" });
+    }
+
     const usersCollection = db.collection("users");
 
     const formFields = req.body;
     const uploadedFiles = req.files;
     const fileBaseURL = `${process.env.BASE_URL}/uploads/`;
+
+    const fileURLs = {};
+    const hashedPassword = await bcrypt.hash(formFields.password, 10); // 10 is the salt rounds
+
 
     const fileURLs = {};
     for (let key in uploadedFiles) {
@@ -169,21 +202,26 @@ app.post("/registration", documentsFields, async (req, res) => {
       }
     }
 
-    // Hash the password before saving (✅ secure!)
+
+    // Hash the password before saving (secure!)
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(formFields.password, salt);
 
     const userData = {
       ...formFields,
+      userType: formFields.userType,
       password: hashedPassword,
       documents: fileURLs,
+
     };
+
+    console.log("User Data:", userData); // Log user data to check
 
     await usersCollection.insertOne(userData);
     res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
     console.error("Registration Error:", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ message: `Internal Server Error: ${error.message}` });
   }
 });
 
@@ -215,11 +253,19 @@ app.post("/login", async (req, res) => {
   }
 });
 
+
+//Admin Components Routes 
+const userRoutes = require("./routes/userRoutes"); //user (patient)
+app.use("/users", userRoutes);
+
+
+
 // === Mount All Other Routes ===
 app.use("/consultant", consultantRoutes);
 app.use("/selftest", selfTestRoutes); // Example additional routes
 
 // === Start Server ===
+
 const startServer = async () => {
   try {
     const mongoUri = process.env.MONGODB_URI;
@@ -231,7 +277,7 @@ const startServer = async () => {
     });
 
     console.log("Mongoose connected to MongoDB");
-
+    await connectDB();
     // Start the server
     const server = app.listen(PORT, () => {
     app.listen(PORT, () => {
