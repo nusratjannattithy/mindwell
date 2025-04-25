@@ -49,6 +49,26 @@ const LogIn = () => {
           if (userType === 'therapist') {
             localStorage.setItem("userEmail", data.user.email); // ✅ Correct value from response
             navigate('/Consultdashboard');
+<<<<<<< HEAD
+=======
+          // Store user data in localStorage
+          localStorage.setItem('user', JSON.stringify(data.user));
+
+          // Check for redirect path from location state
+          const redirectPath = location.state?.from;
+
+          if (redirectPath) {
+            // Add showAttachments flag to redirect state if coming from consultant page with showAttachments
+            if (redirectPath.startsWith('/consultant/')) {
+              if (location.state?.showAttachments) {
+                navigate(redirectPath, { state: { showAttachments: true } });
+              } else {
+                navigate(redirectPath, { state: { showAppointmentForm: true } });
+              }
+            } else {
+              navigate(redirectPath);
+            }
+>>>>>>> 035e236ac20b86d82f2293e0a3d55dc583f2c5de
           } else {
             navigate('/dashboard');
           }

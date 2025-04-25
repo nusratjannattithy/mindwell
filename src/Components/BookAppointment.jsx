@@ -82,6 +82,10 @@ const BookAppointment = () => {
 
 
   const handleTherapistClick = (id) => {
+<<<<<<< HEAD
+=======
+    // Always navigate to consultant profile regardless of login status
+>>>>>>> 035e236ac20b86d82f2293e0a3d55dc583f2c5de
     navigate(`/consultant/${id}`);
   };
   

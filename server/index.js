@@ -6,10 +6,33 @@ const bcrypt = require("bcrypt");
 const path = require("path");
 const dotenv = require("dotenv");
 
+<<<<<<< HEAD
 // Load environment variables
 dotenv.config();
 console.log("MONGODB_URI:", process.env.MONGODB_URI);
 
+=======
+const { connectDB, getDB } = require("./db");
+const Feedback = require("./Schema/Feedback");
+const MoodTracking = require("./models/moodTracking");
+const selfTestRoutes = require("./routes/selftest");
+const { Collection } = require("mongodb");
+
+
+require("dotenv").config(); // Load environment variables from .env file
+
+const dotenv = require("dotenv");
+const appointmentRoutes = require('./routes/appointments');  // Import appointment routes
+
+console.log("Loading environment variables...");
+dotenv.config(); // Load environment variables from .env file
+
+console.log("MONGODB_URI:", process.env.MONGODB_URI);
+
+
+const { connectDB, getDB } = require("./db");
+
+>>>>>>> 035e236ac20b86d82f2293e0a3d55dc583f2c5de
 const User = require("./models/registered");
 const Feedback = require("./Schema/Feedback");
 const MoodTracking = require("./models/moodTracking");
@@ -17,7 +40,7 @@ const selfTestRoutes = require("./routes/selftest");
 const consultantRoutes = require("./routes/consultantRoutes");
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000; // Use fixed port 5000 for backend
 
 // === Middleware ===
 app.use(cors());
@@ -25,7 +48,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static("uploads"));
 
+<<<<<<< HEAD
 // === Multer File Upload Config ===
+=======
+// === File Upload Configuration ===
+// Use therapist routes under '/api'
+app.use('/api', therapistRoutes);
+
+
+// Set up multer for file handling
+>>>>>>> 035e236ac20b86d82f2293e0a3d55dc583f2c5de
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads/");
@@ -50,6 +82,7 @@ app.get("/", (req, res) => {
   res.send("MindWell API is running...");
 });
 
+<<<<<<< HEAD
 // Helpline Message Route
 const Helpline = mongoose.model("Helpline", new mongoose.Schema({
   name: String,
@@ -58,6 +91,22 @@ const Helpline = mongoose.model("Helpline", new mongoose.Schema({
   message: String,
   createdAt: { type: Date, default: Date.now },
 }));
+=======
+
+// Documents for reg
+const documentsFields = upload.fields([
+  { name: "educationalCertificates", maxCount: 1 },
+  { name: "resume", maxCount: 1 },
+  { name: "governmentID", maxCount: 1 },
+  { name: "consentForm", maxCount: 1 },
+  { name: "specializationCertificates", maxCount: 1 },
+  { name: "profilePhoto", maxCount: 1 },
+]);
+
+
+
+// Helpline Message
+>>>>>>> 035e236ac20b86d82f2293e0a3d55dc583f2c5de
 
 app.post("/helpline", async (req, res) => {
   try {
@@ -119,12 +168,35 @@ app.get("/moodtracking", async (req, res) => {
   }
 });
 
+<<<<<<< HEAD
 // Registration with File Uploads & Hashing
 app.post("/registration", documentsFields, async (req, res) => {
   try {
+=======
+// Registration Route with File Uploads and Password Hashing
+
+app.post("/registration", documentsFields, async (req, res) => {
+  try {
+    // Check if files are uploaded
+    if (!req.files) {
+      return res.status(400).json({ message: "No files uploaded" });
+    }
+
+    const db = getDB();
+    if (!db) {
+      return res.status(500).json({ message: "Database connection failed" });
+    }
+
+    const usersCollection = db.collection("users");
+
+>>>>>>> 035e236ac20b86d82f2293e0a3d55dc583f2c5de
     const formFields = req.body;
     const uploadedFiles = req.files;
     const fileBaseURL = `${process.env.BASE_URL}/uploads/`;
+
+    const fileURLs = {};
+    const hashedPassword = await bcrypt.hash(formFields.password, 10); // 10 is the salt rounds
+
 
     const fileURLs = {};
     for (let key in uploadedFiles) {
@@ -133,25 +205,48 @@ app.post("/registration", documentsFields, async (req, res) => {
       }
     }
 
+<<<<<<< HEAD
+=======
+
+    // Hash the password before saving (secure!)
+>>>>>>> 035e236ac20b86d82f2293e0a3d55dc583f2c5de
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(formFields.password, salt);
 
     const userData = {
       ...formFields,
+      userType: formFields.userType,
       password: hashedPassword,
       documents: fileURLs,
+
     };
 
+<<<<<<< HEAD
     const user = new User(userData);
     await user.save();
+=======
+    console.log("User Data:", userData); // Log user data to check
+
+    await usersCollection.insertOne(userData);
+>>>>>>> 035e236ac20b86d82f2293e0a3d55dc583f2c5de
     res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
     console.error("Registration Error:", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ message: `Internal Server Error: ${error.message}` });
   }
 });
 
+<<<<<<< HEAD
 // Login
+=======
+// Login Route
+app.use('/api/selftest', selfTestRoutes);
+
+app.use('/api/appointments', appointmentRoutes);
+
+//user login
+
+>>>>>>> 035e236ac20b86d82f2293e0a3d55dc583f2c5de
 app.post("/login", async (req, res) => {
   try {
     const { userType, email, password } = req.body;
@@ -176,11 +271,23 @@ app.post("/login", async (req, res) => {
 const userRoutes = require("./routes/userRoutes");
 app.use("/users", userRoutes);
 
+<<<<<<< HEAD
 // === Additional Routes ===
+=======
+
+//Admin Components Routes 
+const userRoutes = require("./routes/userRoutes"); //user (patient)
+app.use("/users", userRoutes);
+
+
+
+// === Mount All Other Routes ===
+>>>>>>> 035e236ac20b86d82f2293e0a3d55dc583f2c5de
 app.use("/consultant", consultantRoutes);
 app.use("/selftest", selfTestRoutes);
 
 // === Start Server ===
+
 const startServer = async () => {
   try {
     const mongoUri = process.env.MONGODB_URI;
@@ -192,8 +299,20 @@ const startServer = async () => {
     });
 
     console.log("Mongoose connected to MongoDB");
+    await connectDB();
+    // Start the server
+    const server = app.listen(PORT, () => {
     app.listen(PORT, () => {
       console.log(`Server is live at http://localhost:${PORT}`);
+    });
+
+    server.on('error', (error) => {
+      if (error.code === 'EADDRINUSE') {
+        console.error(`Port ${PORT} is already in use. Please free the port or use a different one.`);
+        process.exit(1);
+      } else {
+        console.error('Server error:', error);
+      }
     });
   } catch (err) {
     console.error("Server failed to start:", err.message);

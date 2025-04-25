@@ -24,9 +24,16 @@ import AppointmentForm from './Components/AppointmentForm';
 import ActivitySection from './Components/ActivitySection';
 import HistorySection from './Components/HistorySection';
 import ProfileSettings from './Components/ProfileSettings';
+<<<<<<< HEAD
 import ConsultantProfile from './Components/ConsultantProfile';
+=======
+
+import ConsultantProfile  from './Components/ConsultantProfile';
+import AdminDashboard from './Components/AdminDashboard';
+>>>>>>> 035e236ac20b86d82f2293e0a3d55dc583f2c5de
 import Admin from './Pages/Admin';
 import ConsultantDashboard from './Components/ConsultantDashboard';
+import NotFound from './Components/NotFound';
 
 
 
@@ -39,6 +46,7 @@ function App() {
       <Navbar />
 
       {/* Define Routes for Navigation */}
+<<<<<<< HEAD
       <Routes>
         {/* Define different routes for different components */}
        
@@ -71,8 +79,45 @@ function App() {
        
         
       </Routes>
+=======
+
+        <Routes>
+          {/* Define different routes for different components */}
+         
+          <Route path="/resources" element={<Resources />} />
+          <Route path="/login" element={<LogIn />} />
+          <Route path="/registration" element={<Registration/>} />
+          <Route path="/assessment" element={<SelfTest />} />
+          <Route path="/options" element={<OptionsPage />} />
+          <Route path="/book-appointment" element={<BookAppointment />} />
+          <Route path="/moodtracking" element={<MoodTracking/>} />
+          <Route path="/moodenhancement" element={<MoodEnhancement/>} />
+          <Route path="/helpline" element={<Helpline />} />
+          <Route path="/blog" element={<BlogList />} />
+          <Route path="/blog/:id" element={<BlogDetail />} />
+          <Route path="/articles" element={<Articles />} />
+          <Route path="/books" element={<Books />} />
+          <Route path="/dashboard" element={<PatientDashboard />} />
+          <Route path="/consultdashboard" element={<ConsultantDashboard/>} />
+          <Route path="/books" element={<Books />} /> 
+          <Route path="/feedback" element={<Feedback />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/aboutus" element={<AboutUs />} />        <Route path="/appointmentform" element={<AppointmentForm />} />
+          <Route path="/activitysection" element={<ActivitySection />} />
+          <Route path="/historysection" element={<HistorySection />} />
+          <Route path="/profilesettings" element={<ProfileSettings />} />
+          <Route path="/consultant/:id" element={<ConsultantProfile />} />
+          <Route path="/admin" element ={<Admin/>}/>
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          
+          <Route path="*" element={<NotFound />} />
+
+        </Routes>
+
+>>>>>>> 035e236ac20b86d82f2293e0a3d55dc583f2c5de
 
       {/* Footer is displayed on all pages */}
+     
       <Footer />
     </>
   );
