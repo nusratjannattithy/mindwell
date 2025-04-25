@@ -25,7 +25,6 @@ import ActivitySection from './Components/ActivitySection';
 import HistorySection from './Components/HistorySection';
 import ProfileSettings from './Components/ProfileSettings';
 import ConsultantProfile from './Components/ConsultantProfile';
-import AdminDashboard from './Components/AdminDashboard';
 import Admin from './Pages/Admin';
 import ConsultantDashboard from './Components/ConsultantDashboard';
 
@@ -67,7 +66,6 @@ function App() {
         <Route path="/ProfileSettings" element={<ProfileSettings />} />
         <Route path="/consultant/:id" element={<ConsultantProfile />} />
         <Route path="/Admin" element ={<Admin/>}/>
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
         
         
        
