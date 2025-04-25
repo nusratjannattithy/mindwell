@@ -10,8 +10,6 @@ const selfTestRoutes = require("./routes/selftest");
 const { Collection } = require("mongodb");
 
 require("dotenv").config(); // Load environment variables from .env file
-console.log("MONGODB_URI:", process.env.MONGODB_URI);
-
 const User = require("./models/registered");
 
 const app = express();
@@ -41,6 +39,17 @@ const upload = multer({ storage });
 app.get("/", (req, res) => {
   res.send("MindWell API is running...");
 });
+
+// Documents for reg
+const documentsFields = upload.fields([
+  { name: "educationalCertificates", maxCount: 1 },
+  { name: "resume", maxCount: 1 },
+  { name: "governmentID", maxCount: 1 },
+  { name: "consentForm", maxCount: 1 },
+  { name: "specializationCertificates", maxCount: 1 },
+  { name: "profilePhoto", maxCount: 1 },
+]);
+
 
 // Helpline message endpoint
 app.post("/helpline", async (req, res) => {
@@ -169,20 +178,22 @@ app.get("/moodtracking", async (req, res) => {
   }
 });
 
-const documentsFields = upload.fields([
-  { name: "educationalCertificates", maxCount: 1 },
-  { name: "resume", maxCount: 1 },
-  { name: "governmentID", maxCount: 1 },
-  { name: "consentForm", maxCount: 1 },
-  { name: "specializationCertificates", maxCount: 1 },
-  { name: "profilePhoto", maxCount: 1 },
-]);
+
 
 // registration code
 
 app.post("/registration", documentsFields, async (req, res) => {
   try {
+    // Check if files are uploaded
+    if (!req.files) {
+      return res.status(400).json({ message: "No files uploaded" });
+    }
+
     const db = getDB();
+    if (!db) {
+      return res.status(500).json({ message: "Database connection failed" });
+    }
+
     const usersCollection = db.collection("users");
 
     const formFields = req.body;
@@ -190,6 +201,7 @@ app.post("/registration", documentsFields, async (req, res) => {
 
     const fileBaseURL = `${process.env.BASE_URL}/uploads/`;
     const fileURLs = {};
+    const hashedPassword = await bcrypt.hash(formFields.password, 10); // 10 is the salt rounds
 
     for (let key in uploadedFiles) {
       if (uploadedFiles[key]) {
@@ -197,19 +209,22 @@ app.post("/registration", documentsFields, async (req, res) => {
       }
     }
 
-    // Store password as plain text (not recommended)
+    // Log the user data for debugging
     const userData = {
       ...formFields,
-      password: formFields.password,
+      userType: formFields.userType,
+      password: hashedPassword, // Consider hashing the password
       documents: { ...fileURLs },
     };
+
+    console.log("User Data:", userData); // Log user data to check
 
     await usersCollection.insertOne(userData);
 
     res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
     console.error("Registration Error:", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ message: `Internal Server Error: ${error.message}` });
   }
 });
 
@@ -255,7 +270,7 @@ app.post("/login", async (req, res) => {
 });
 
 //Admin Components Routes 
-const userRoutes = require("./routes/userRoutes");
+const userRoutes = require("./routes/userRoutes"); //user (patient)
 app.use("/users", userRoutes);
 
 
@@ -279,7 +294,7 @@ const startServer = async () => {
     });
 
     console.log("Mongoose connected to MongoDB");
-
+    await connectDB();
     // Start the server
     app.listen(PORT, () => {
       console.log(`Server is live at http://localhost:${PORT}`);

@@ -58,8 +58,11 @@ const Registration = () => {
     const form = new FormData();
     form.append("userType", userType);
     for (const key in formData) {
-      form.append(key, formData[key]);
+      if (key !== "documents") {
+        form.append(key, formData[key]);
+      }
     }
+    
     for (const key in formData.documents) {
       if (formData.documents[key]) {
         form.append(key, formData.documents[key]);

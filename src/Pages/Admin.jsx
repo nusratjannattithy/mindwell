@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import Heading from "../Components/Heading";
 import AdminPannel from "../Components/AdminPannel";
 import UserList from "../Components/UserList";
-
+import ConsultantList from "../Components/ConsultantList"
+import AdminResources from "../Components/AdminResources"
 const Admin = () => {
   const [selectedItem, setSelectedItem] = useState("Dashboard");
 
@@ -11,11 +12,11 @@ const Admin = () => {
       case "Users":
         return <div><UserList/></div>
       case "Consultants":
-        return <div>Consultants management tools.</div>;
+        return <div><ConsultantList/></div>;
       case "Appointment Booking":
         return <div>Appointments list and booking management.</div>;
       case "Manage Resources":
-        return <div>Upload, edit, or delete resources here.</div>;
+        return <div><AdminResources/></div>;
       case "View Reviews":
         return <div>User reviews and comments overview.</div>;
       case "Helpline Messages":
