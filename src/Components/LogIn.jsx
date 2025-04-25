@@ -1,7 +1,11 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 
+
+
 import { Link, useNavigate } from 'react-router-dom';
+
+import { useLocation } from 'react-router-dom';
 
 const LogIn = () => {
   const [email, setEmail] = useState('');
@@ -9,10 +13,13 @@ const LogIn = () => {
   const [userType, setUserType] = useState('patient'); // default user type
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
@@ -20,9 +27,11 @@ const LogIn = () => {
       return;
     }
 
+
     if (userType === 'admin') {
       if (email === 'admin@mindwell.com' && password === 'ADMIN123') {
         console.log('Admin logged in');
+        localStorage.setItem('user', JSON.stringify({ userType: 'admin', email }));
         navigate('/Admin');
       } else {
         setError('Invalid admin credentials. Please try again.');
@@ -31,6 +40,7 @@ const LogIn = () => {
       // For therapist and patient login using backend
       try {
         console.log("Logging in with:", { userType, email, password}); // Log request data
+        console.log("Logging in with:", { userType, email, password }); // Log request data
         const response = await fetch('http://localhost:5000/login', {
           method: 'POST',
           headers: {
@@ -39,17 +49,40 @@ const LogIn = () => {
           body: JSON.stringify({ userType, email, password})
         });
 
+
         const data = await response.json();
+
 
         if (!response.ok) {
           setError(data.message || 'Login failed.');
         } else {
           console.log(`${userType} logged in`, data.user);
+          // Store user info in localStorage
+          localStorage.setItem('user', JSON.stringify({ userType, ...data.user }));
+
 
           if (userType === 'therapist') {
+            localStorage.setItem("userEmail", data.user.email); // ✅ Correct value from response
             navigate('/Consultdashboard');
+          // Store user data in localStorage
+          localStorage.setItem('user', JSON.stringify(data.user));
+
+          // Check for redirect path from location state
+          const redirectPath = location.state?.from;
+
+          if (redirectPath) {
+            // Add showAppointmentForm flag to redirect state if coming from consultant booking
+            if (redirectPath.startsWith('/consultant/')) {
+              navigate(redirectPath, { state: { showAppointmentForm: true } });
+            } else {
+              navigate(redirectPath);
+            }
           } else {
-            navigate('/dashboard');
+            if (userType === 'therapist') {
+              navigate('/Consultdashboard');
+            } else {
+              navigate('/dashboard');
+            }
           }
         }
       } catch (err) {
@@ -59,6 +92,7 @@ const LogIn = () => {
     }
   };
 
+
   return (
     <>
       <div className="flex items-center justify-center min-h-screen bg-blue-100">
@@ -66,7 +100,9 @@ const LogIn = () => {
           <h2 className="text-3xl font-bold text-center text-blue-700">Welcome Back</h2>
           <p className="text-center text-gray-600 text-sm mt-1">Log in to continue your wellness journey.</p>
 
+
           {error && <p className="text-red-500 text-sm text-center mt-2">{error}</p>}
+
 
           <form onSubmit={handleSubmit} className="mt-6">
             <div>
@@ -84,6 +120,7 @@ const LogIn = () => {
               </select>
             </div>
 
+
             <div className="mt-4">
               <label className="block text-sm font-medium text-gray-700" htmlFor="email">Email Address</label>
               <input
@@ -96,6 +133,7 @@ const LogIn = () => {
                 className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
+
 
             <div className="mt-4">
               <label className="block text-sm font-medium text-gray-700" htmlFor="password">Password</label>
@@ -110,11 +148,13 @@ const LogIn = () => {
               />
             </div>
 
+
             <div className="text-right mt-2">
               <Link to="/forgot-password" className="text-sm text-blue-500 hover:text-blue-600 font-semibold transition">
                 Forgot your password?
               </Link>
             </div>
+
 
             <button
               type="submit"
@@ -123,6 +163,7 @@ const LogIn = () => {
               Sign In
             </button>
           </form>
+
 
           <div className="text-center mt-4">
             <p className="text-sm text-gray-600">
@@ -138,4 +179,10 @@ const LogIn = () => {
   );
 };
 
+
 export default LogIn;
+
+
+
+
+
