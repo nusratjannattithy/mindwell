@@ -63,10 +63,10 @@ export default function AppointmentForm() {
       phone,
       gender,
       type,
-      date: selectedDate,
-      time: selectedTime,
+      selectedDate: selectedDate,
+      selectedTime: selectedTime,
       remarks,
-      consultant: selectedConsultant,
+      consultantId: selectedConsultant,
       branch,
       fee,
     };

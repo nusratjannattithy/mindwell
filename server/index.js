@@ -12,23 +12,9 @@ const Feedback = require("./Schema/Feedback");
 const MoodTracking = require("./models/moodTracking");
 const selfTestRoutes = require("./routes/selftest");
 const { Collection } = require("mongodb");
-
-const dotenv = require("dotenv");
 const appointmentRoutes = require('./routes/appointments');  // Import appointment routes
-
-console.log("Loading environment variables...");
-dotenv.config(); // Load environment variables from .env file
-
-console.log("MONGODB_URI:", process.env.MONGODB_URI);
-
-
-const { connectDB, getDB } = require("./db");
 const User = require("./models/registered");
-const Feedback = require("./Schema/Feedback");
-const MoodTracking = require("./models/moodTracking");
-const selfTestRoutes = require("./routes/selftest");
 const consultantRoutes = require("./routes/consultantRoutes");
-
 const therapistRoutes = require('./therapistRoutes');  // Import therapist routes
 
 const app = express();
@@ -232,20 +218,31 @@ const startServer = async () => {
 
     console.log("Mongoose connected to MongoDB");
 
-    // Start the server
-    const server = app.listen(PORT, () => {
-    app.listen(PORT, () => {
-      console.log(`Server is live at http://localhost:${PORT}`);
-    });
+    // Function to start server on a given port with retry on EADDRINUSE
+    const tryListen = (port, retries = 5) => {
+      return new Promise((resolve, reject) => {
+        const server = app.listen(port, () => {
+          console.log(`Server is live at http://localhost:${port}`);
+          resolve(server);
+        });
 
-    server.on('error', (error) => {
-      if (error.code === 'EADDRINUSE') {
-        console.error(`Port ${PORT} is already in use. Please free the port or use a different one.`);
-        process.exit(1);
-      } else {
-        console.error('Server error:', error);
-      }
-    });
+        server.on('error', (error) => {
+          if (error.code === 'EADDRINUSE') {
+            if (retries > 0) {
+              console.warn(`Port ${port} is in use, trying port ${port + 1}...`);
+              resolve(tryListen(port + 1, retries - 1));
+            } else {
+              reject(new Error(`All ports from ${port - 5} to ${port} are in use.`));
+            }
+          } else {
+            reject(error);
+          }
+        });
+      });
+    };
+
+    await tryListen(PORT);
+
   } catch (err) {
     console.error("Server failed to start:", err.message);
     process.exit(1);

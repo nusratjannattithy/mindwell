@@ -39,37 +39,34 @@ const LogIn = () => {
     } else {
       // For therapist and patient login using backend
       try {
-        console.log("Logging in with:", { userType, email, password}); // Log request data
         console.log("Logging in with:", { userType, email, password }); // Log request data
         const response = await fetch('http://localhost:5000/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ userType, email, password})
+          body: JSON.stringify({ userType, email, password })
         });
-
-
+    
         const data = await response.json();
-
-
+    
         if (!response.ok) {
           setError(data.message || 'Login failed.');
         } else {
           console.log(`${userType} logged in`, data.user);
           // Store user info in localStorage
           localStorage.setItem('user', JSON.stringify({ userType, ...data.user }));
-
-
+    
           if (userType === 'therapist') {
             localStorage.setItem("userEmail", data.user.email); // ✅ Correct value from response
             navigate('/Consultdashboard');
+          }
           // Store user data in localStorage
           localStorage.setItem('user', JSON.stringify(data.user));
-
+    
           // Check for redirect path from location state
           const redirectPath = location.state?.from;
-
+    
           if (redirectPath) {
             // Add showAttachments flag to redirect state if coming from consultant page with showAttachments
             if (redirectPath.startsWith('/consultant/')) {
@@ -90,7 +87,7 @@ const LogIn = () => {
           }
         }
       } catch (err) {
-      console.error(err);
+        console.error(err);
         setError('Something went wrong. Please try again.');
       }
     }
@@ -185,8 +182,3 @@ const LogIn = () => {
 
 
 export default LogIn;
-
-
-
-
-
