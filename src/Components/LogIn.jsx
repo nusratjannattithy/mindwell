@@ -3,15 +3,12 @@ import React, { useState } from 'react';
 
 import { Link, useNavigate } from 'react-router-dom';
 
-import { useLocation } from 'react-router-dom';
-
 const LogIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [userType, setUserType] = useState('patient'); // default user type
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  const location = useLocation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -52,6 +49,7 @@ const LogIn = () => {
           if (userType === 'therapist') {
             localStorage.setItem("userEmail", data.user.email); // ✅ Correct value from response
             navigate('/Consultdashboard');
+
           // Store user data in localStorage
           localStorage.setItem('user', JSON.stringify(data.user));
 
@@ -59,13 +57,18 @@ const LogIn = () => {
           const redirectPath = location.state?.from;
 
           if (redirectPath) {
-            navigate(redirectPath);
-          } else {
-            if (userType === 'therapist') {
-              navigate('/Consultdashboard');
+            // Add showAttachments flag to redirect state if coming from consultant page with showAttachments
+            if (redirectPath.startsWith('/consultant/')) {
+              if (location.state?.showAttachments) {
+                navigate(redirectPath, { state: { showAttachments: true } });
+              } else {
+                navigate(redirectPath, { state: { showAppointmentForm: true } });
+              }
             } else {
-              navigate('/dashboard');
+              navigate(redirectPath);
             }
+          } else {
+            navigate('/dashboard');
           }
         }
       } 

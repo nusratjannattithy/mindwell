@@ -22,7 +22,7 @@ const MoodTracking = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get('http://localhost:5001/moodtracking');
+      const response = await axios.get('http://localhost:5000/moodtracking');
       setEntries(response.data);
     } catch (err) {
       setError('Failed to fetch mood tracking data');
@@ -37,15 +37,15 @@ const MoodTracking = () => {
     let combinedResult = '';
 
     if (mood <= 3 && distraction >= 7) {
-      combinedResult = "You're feeling low and highly distracted. Engaging in calming and focus-enhancing activities might help.";
+      combinedResult = "Feeling low and highly distracted. Engaging in calming and focus-enhancing activities might help.";
     } else if (mood <= 3) {
-      combinedResult = "You're feeling low. Consider some calming activities to uplift your mood.";
+      combinedResult = "Feeling low. Consider some calming activities to uplift your mood.";
     } else if (distraction >= 7) {
-      combinedResult = "You're feeling quite distracted. Engaging with stress-relief content might improve your focus.";
+      combinedResult = "Feeling quite distracted. Engaging with stress-relief content might improve your focus.";
     } else if (mood <= 7 || distraction <= 7) {
-      combinedResult = "You're feeling okay but could benefit from some mood-enhancing or focus activities.";
+      combinedResult = "Feeling okay but could benefit from some mood-enhancing or focus activities.";
     } else {
-      combinedResult = "You're in a great mood and highly focused! Keep it up, but feel free to explore more uplifting content.";
+      combinedResult = "Great mood and highly focused! Keep it up, but feel free to explore more uplifting content.";
     }
 
     setResult(combinedResult);
@@ -54,7 +54,7 @@ const MoodTracking = () => {
     setSuccessMessage(null);
 
     try {
-      const response = await axios.post('http://localhost:5001/moodtracking', {
+      const response = await axios.post('http://localhost:5000/moodtracking', {
         mood: Number(mood),
         distraction: Number(distraction),
         result: combinedResult,
