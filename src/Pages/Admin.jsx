@@ -3,13 +3,8 @@ import React, { useState } from "react";
 import Heading from "../Components/Heading";
 import AdminPannel from "../Components/AdminPannel";
 import UserList from "../Components/UserList";
-<<<<<<< HEAD
-import AdminResources from "../Components/AdminResources";
-
-=======
 import ConsultantList from "../Components/ConsultantList"
 import AdminResources from "../Components/AdminResources"
->>>>>>> 035e236ac20b86d82f2293e0a3d55dc583f2c5de
 const Admin = () => {
   const [selectedItem, setSelectedItem] = useState("Dashboard");
 
@@ -18,11 +13,7 @@ const Admin = () => {
       case "Users":
         return <div><UserList/></div>
       case "Consultants":
-<<<<<<< HEAD
-        return <div>Consultants management tools.</div>;
-=======
         return <div><ConsultantList/></div>;
->>>>>>> 035e236ac20b86d82f2293e0a3d55dc583f2c5de
       case "Appointment Booking":
         return <div>Appointments list and booking management.</div>;
       case "Manage Resources":
