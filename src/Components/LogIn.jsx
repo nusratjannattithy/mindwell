@@ -71,7 +71,8 @@ const LogIn = () => {
             navigate('/dashboard');
           }
         }
-      } catch (err) {
+      } 
+    }catch (err) {
       console.error(err);
         setError('Something went wrong. Please try again.');
       }

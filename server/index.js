@@ -6,7 +6,6 @@ const bcrypt = require("bcrypt");
 const path = require("path");
 const dotenv = require("dotenv");
 
-
 // Load environment variables
 
 
@@ -25,13 +24,7 @@ console.log("Loading environment variables...");
 console.log("MONGODB_URI:", process.env.MONGODB_URI);
 
 
-const { connectDB, getDB } = require("./db");
-
-
 const User = require("./models/registered");
-const Feedback = require("./Schema/Feedback");
-const MoodTracking = require("./models/moodTracking");
-const selfTestRoutes = require("./routes/selftest");
 const consultantRoutes = require("./routes/consultantRoutes");
 
 const app = express();

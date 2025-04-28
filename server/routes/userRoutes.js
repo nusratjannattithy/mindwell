@@ -35,8 +35,5 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-<<<<<<< HEAD
+
 module.exports = router;
-=======
-module.exports = router;
->>>>>>> 035e236ac20b86d82f2293e0a3d55dc583f2c5de
