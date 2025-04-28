@@ -209,11 +209,14 @@ app.post("/registration", documentsFields, async (req, res) => {
       }
     }
 
+    // Remove confirmPassword from formFields before saving
+    const { confirmPassword, password, ...otherFields } = formFields;
+
     // Log the user data for debugging
     const userData = {
-      ...formFields,
+      ...otherFields,
       userType: formFields.userType,
-      password: hashedPassword, // Consider hashing the password
+      password: hashedPassword, // Hashed password
       documents: { ...fileURLs },
     };
 

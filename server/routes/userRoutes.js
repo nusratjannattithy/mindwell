@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/registered");
 
-// GET all patients (admin only)
 router.get("/", async (req, res) => {
   try {
     // Fetch users with userType "patient" and exclude the password field

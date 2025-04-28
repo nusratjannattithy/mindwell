@@ -173,7 +173,7 @@ const Registration = () => {
         { label: 'Educational Certificates', name: 'educationalCertificates' },
         { label: 'Professional Resume / CV', name: 'resume' },
         { label: 'Government-issued ID', name: 'governmentID' },
-        { label: 'Consent to Platform Policies', name: 'consentForm' },
+        { label: 'Experience Certificate', name: 'consentForm' },
         { label: 'Specialization Certificates', name: 'specializationCertificates' },
         { label: 'Profile Photo', name: 'profilePhoto' },
       ].map((doc) => (
