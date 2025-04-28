@@ -47,12 +47,32 @@ const LogIn = () => {
           console.log(`${userType} logged in`, data.user);
 
           if (userType === 'therapist') {
+            localStorage.setItem("userEmail", data.user.email); // ✅ Correct value from response
             navigate('/Consultdashboard');
+
+          // Store user data in localStorage
+          localStorage.setItem('user', JSON.stringify(data.user));
+
+          // Check for redirect path from location state
+          const redirectPath = location.state?.from;
+
+          if (redirectPath) {
+            // Add showAttachments flag to redirect state if coming from consultant page with showAttachments
+            if (redirectPath.startsWith('/consultant/')) {
+              if (location.state?.showAttachments) {
+                navigate(redirectPath, { state: { showAttachments: true } });
+              } else {
+                navigate(redirectPath, { state: { showAppointmentForm: true } });
+              }
+            } else {
+              navigate(redirectPath);
+            }
           } else {
             navigate('/dashboard');
           }
         }
-      } catch (err) {
+      } 
+    }catch (err) {
       console.error(err);
         setError('Something went wrong. Please try again.');
       }
