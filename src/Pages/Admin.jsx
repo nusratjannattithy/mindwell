@@ -5,6 +5,9 @@ import AdminPannel from "../Components/AdminPannel";
 import UserList from "../Components/UserList";
 import ConsultantList from "../Components/ConsultantList"
 import AdminResources from "../Components/AdminResources"
+import AdminHelpline from "../Components/AdminHelpline";
+import AdminReview from "../Components/AdminReview";
+import AdminAppointment from "../Components/AdminAppointment";
 const Admin = () => {
   const [selectedItem, setSelectedItem] = useState("Dashboard");
 
@@ -14,14 +17,14 @@ const Admin = () => {
         return <div><UserList/></div>
       case "Consultants":
         return <div><ConsultantList/></div>;
-      case "Appointment Booking":
-        return <div>Appointments list and booking management.</div>;
+      case "Appointment Bookings":
+        return <div><AdminAppointment/></div>;
       case "Manage Resources":
         return <div><AdminResources/></div>;
       case "View Reviews":
-        return <div>User reviews and comments overview.</div>;
+        return <div><AdminReview/></div>;
       case "Helpline Messages":
-        return <div>Messages sent through helpline appear here.</div>;
+        return <div><AdminHelpline/></div>;
       default:
         return <div>Welcome to the admin dashboard! Select an option from the menu.</div>;
     }

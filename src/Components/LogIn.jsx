@@ -6,7 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 const LogIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [userType, setUserType] = useState(''); // default user type
+  const [userType, setUserType] = useState('admin'); // default user type
   const [error, setError] = useState('');
   const navigate = useNavigate();
 

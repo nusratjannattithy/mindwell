@@ -13,4 +13,4 @@ const appointmentSchema = new mongoose.Schema({
   status: { type: String, default: 'pending' }, // pending, accepted, rejected etc
 });
 
-module.exports = mongoose.model('Appointment', appointmentSchema);
+module.exports = mongoose.models.Appointment || mongoose.model('Appointment', appointmentSchema);

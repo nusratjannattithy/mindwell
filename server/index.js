@@ -25,6 +25,7 @@ console.log("MONGODB_URI:", process.env.MONGODB_URI);
 
 
 const User = require("./models/registered");
+
 const consultantRoutes = require("./routes/consultantRoutes");
 
 const app = express();
@@ -35,6 +36,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static("uploads"));
+
 
 // Set up multer for file handling
 
@@ -77,7 +79,7 @@ const documentsFields = upload.fields([
 
 
 
-// Helpline Message
+// Helpline Message to send
 
 app.post("/helpline", async (req, res) => {
   try {
@@ -87,6 +89,17 @@ app.post("/helpline", async (req, res) => {
     res.status(201).json({ success: true, message: "Your message has been sent successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+});
+
+// Helpline Message to fetch the msg
+
+app.get("/helpline", async (req, res) => {
+  try {
+    const messages = await Helpline.find().sort({ createdAt: -1 }); // Sort newest first
+    res.status(200).json(messages);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch messages", error: error.message });
   }
 });
 
@@ -192,8 +205,8 @@ app.post("/registration", documentsFields, async (req, res) => {
 });
 
 
-// Login Route
-app.use('/api/selftest', selfTestRoutes);
+
+//app.use('/api/selftest', selfTestRoutes);
 
 app.use('/api/appointments', appointmentRoutes);
 
@@ -222,6 +235,10 @@ app.post("/login", async (req, res) => {
 const userRoutes = require("./routes/userRoutes");
 app.use("/users", userRoutes);
 
+
+
+
+
 // === Mount All Other Routes ===
 app.use("/consultant", consultantRoutes);
 app.use("/selftest", selfTestRoutes);
@@ -240,6 +257,8 @@ const startServer = async () => {
 
     console.log("Mongoose connected to MongoDB");
     await connectDB();
+
+
     // Start the server
     const server = app.listen(PORT, () => {
       console.log(`Server is live at http://localhost:${PORT}`);
