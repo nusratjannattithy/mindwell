@@ -3,10 +3,10 @@ import React, { useState } from "react";
 import Heading from "../Components/Heading";
 import AdminPannel from "../Components/AdminPannel";
 import UserList from "../Components/UserList";
-import ConsultantList from "../Components/ConsultantList"
 import AdminResources from "../Components/AdminResources"
 import AdminHelpline from "../Components/AdminHelpline";
 import AdminReview from "../Components/AdminReview";
+import AdminCons from "../Components/AdminCons";
 import AdminAppointment from "../Components/AdminAppointment";
 const Admin = () => {
   const [selectedItem, setSelectedItem] = useState("Dashboard");
@@ -16,8 +16,8 @@ const Admin = () => {
       case "Users":
         return <div><UserList/></div>
       case "Consultants":
-        return <div><ConsultantList/></div>;
-      case "Appointment Bookings":
+        return <div><AdminCons/></div>;
+      case "Appointment Booking":
         return <div><AdminAppointment/></div>;
       case "Manage Resources":
         return <div><AdminResources/></div>;
@@ -25,6 +25,8 @@ const Admin = () => {
         return <div><AdminReview/></div>;
       case "Helpline Messages":
         return <div><AdminHelpline/></div>;
+      case "Appointmentt Bookings":
+        return <div><AdminAppointment/></div>;
       default:
         return <div>Welcome to the admin dashboard! Select an option from the menu.</div>;
     }

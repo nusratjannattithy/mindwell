@@ -1,94 +1,117 @@
-import React, { useState, useRef } from "react"; 
-import { FaPlus, FaTrash } from "react-icons/fa";
-
-const initialResources = {
-  blogs: [
-    { id: 1, title: "Breathing Techniques", image: "/assets/blog_img/breathing-techniques.jpg" },
-    { id: 2, title: "Self Compassion", image: "/assets/blog_img/self-compassion.jpg" },
-  ],
-  articles: [
-    { id: 1, title: "CBT & Stress", file: "/assets/articles/article2.pdf" },
-  ],
-  books: [
-    { id: 1, title: "Mental Health Book", file: "/assets/books/book1.pdf" },
-  ]
-};
+/* eslint-disable no-unused-vars */
+import React from "react";
+import { Link } from "react-router-dom";
+import { FaArrowRight } from 'react-icons/fa';
+import breathingTechniques from "../assets/blog_img/breathing-techniques.jpg";
+import selfCompassion from "../assets/blog_img/self-compassion.jpg";
+import selfHarm from "../assets/blog_img/self-harm.jpg";
 
 const AdminResources = () => {
-  const [resources, setResources] = useState(initialResources);
-  const fileInputs = {
-    blogs: useRef(),
-    articles: useRef(),
-    books: useRef(),
-  };
+  // Articles data
+  const articles = [
+    {
+      title: "An integrative collaborative care model for people with mental illness and physical comorbidities",
+      abstract: "Many individuals with mental health problems have comorbid physical conditions, or may present with substance/alcohol misuse or abuse issues...",
+      pdf: "./assets/articles/article1.pdf", 
+    },
+    {
+      title: "Cognitive–behavioral therapy for management of mental health and stress-related disorders",
+      abstract: "Cognitive–behavioral therapy (CBT) helps individuals to eliminate avoidant and safety-seeking behaviors that prevent self-correction of faulty beliefs...",
+      pdf: "./assets/articles/article2.pdf", 
+    },
+  ];
 
-  const handleDelete = (type, id) => {
-    setResources((prev) => ({
-      ...prev,
-      [type]: prev[type].filter(item => item.id !== id)
-    }));
-  };
+  // Books data
+  const books = [
+    {
+      title: "The Little Book of Mental Health",
+      description: "Everyday wellbeing is about how we feel, think and behave. Focus on mental and physical health equally.",
+      pdf: "./assets/books/book1.pdf",
+    },
+    {
+      title: "Look after your mental health using exercise",
+      description: "Physical activity means any movement of your body that uses your muscles and expends energy.",
+      pdf: "./assets/books/book2.pdf",
+    },
+    {
+      title: "Mental Health in the Workplace",
+      description: "This book explores the intersection between mental health and the workplace.",
+      pdf: "./assets/books/book3.pdf",
+    },
+  ];
 
-  const handleUpload = (type, fileInfo) => {
-    const newResource = {
-      id: Date.now(),
-      title: fileInfo.name,
-      file: URL.createObjectURL(fileInfo), // Only preview
-    };
-
-    setResources(prev => ({
-      ...prev,
-      [type]: [...prev[type], newResource]
-    }));
-  };
-
-  const renderSection = (type, label) => (
-    <div className="mb-10">
-      <h2 className="text-2xl font-bold mt-8 mb-4">{label}</h2>
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-        {resources[type].map(res => (
-          <div key={res.id} className="border p-4 rounded shadow bg-white relative">
-            {res.image && <img src={res.image} alt={res.title} className="h-40 object-cover mb-2" />}
-            <h3 className="font-semibold truncate">{res.title}</h3>
-            {res.file && <a href={res.file} className="text-blue-600 underline" target="_blank" rel="noopener noreferrer">Open</a>}
-            <button
-              className="absolute top-2 right-2 text-red-500 hover:text-red-700"
-              onClick={() => handleDelete(type, res.id)}
-            >
-              <FaTrash />
-            </button>
-          </div>
-        ))}
-      </div>
-      <div className="mt-6">
-        <input
-          type="file"
-          accept={type === "blogs" ? "image/*" : ".pdf"}
-          ref={fileInputs[type]}
-          className="hidden"
-          onChange={(e) => {
-            if (e.target.files[0]) {
-              handleUpload(type, e.target.files[0]);
-              e.target.value = "";
-            }
-          }}
-        />
-        <button
-          onClick={() => fileInputs[type].current.click()}
-          className="mt-2 inline-flex items-center gap-2 bg-[#1A0B5B] text-white px-5 py-2 rounded-full hover:bg-[#120A3C] transition-all shadow"
-        >
-          <FaPlus /> Add New {label.slice(0, -1)}
-        </button>
-      </div>
-    </div>
-  );
+  // Blogs data
+  const blog = [
+    {
+      id: 1,
+      title: "Breathing Techniques For Anxiety You Can Start Using Today",
+      description: "Effective breathing techniques to reduce stress and build resilience.",
+      image: breathingTechniques
+    },
+    {
+      id: 2,
+      title: "What Is Self-Compassion: 5 Facts, 4 Myths, And 5 Ways To Practice It",
+      description: "Learn how self-compassion boosts mental health and get tips to practice it.",
+      image: selfCompassion
+    },
+    {
+      id: 3,
+      title: "How To Stop Cutting: 7 Ways To Quit Self-Harm For Good",
+      description: "Guide on overcoming self-harm tendencies and mental health struggles.",
+      image: selfHarm
+    }
+  ];
 
   return (
-    <div className="p-8 bg-blue-50 min-h-screen">
-      <h1 className="text-4xl font-bold mb-6">Manage Resources</h1>
-      {renderSection("blogs", "Blogs")}
-      {renderSection("articles", "Articles")}
-      {renderSection("books", "Books")}
+    <div className="p-6 bg-gray-100 min-h-screen">
+      {/* Blogs */}
+      <div className="mb-10">
+        <h3 className="text-2xl font-bold mb-4 text-gray-700">Blogs</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {blog.map((item) => (
+            <div key={item.id} className="bg-white rounded-lg shadow-md p-4">
+              <img src={item.image} alt={item.title} className="w-full h-40 object-cover rounded" />
+              <h4 className="mt-4 text-xl font-semibold">{item.title}</h4>
+              <p className="text-gray-600 mt-2">{item.description}</p>
+              <Link to={`/blog/${item.id}`} className="text-blue-600 mt-3 inline-block hover:underline">
+                View Blog <FaArrowRight className="inline-block ml-1" />
+              </Link>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Articles */}
+      <div className="mb-10">
+        <h3 className="text-2xl font-bold mb-4 text-gray-700">Articles</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {articles.map((item, index) => (
+            <div key={index} className="bg-white rounded-lg shadow-md p-4">
+              <h4 className="text-xl font-semibold">{item.title}</h4>
+              <p className="text-gray-600 mt-2">{item.abstract}</p>
+              <a href={item.pdf} target="_blank" rel="noopener noreferrer" className="text-blue-600 mt-3 inline-block hover:underline">
+                Open PDF <FaArrowRight className="inline-block ml-1" />
+              </a>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Books */}
+      <div>
+        <h3 className="text-2xl font-bold mb-4 text-gray-700">Books</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {books.map((item, index) => (
+            <div key={index} className="bg-white rounded-lg shadow-md p-4">
+              <h4 className="text-xl font-semibold">{item.title}</h4>
+              <p className="text-gray-600 mt-2">{item.description}</p>
+              <a href={item.pdf} target="_blank" rel="noopener noreferrer" className="text-blue-600 mt-3 inline-block hover:underline">
+                Open Book <FaArrowRight className="inline-block ml-1" />
+              </a>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };

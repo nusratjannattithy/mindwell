@@ -8,8 +8,9 @@ const AdminAppointment = () => {
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/appointment");
-        setAppointments(response.data.appointments);
+        const response = await axios.get("http://localhost:5000/api/appointments"); 
+        console.log("Fetched appointments:", response.data);
+        setAppointments(response.data);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching appointments:", error);
@@ -22,9 +23,6 @@ const AdminAppointment = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-6">
-      <h1 className="text-4xl font-bold text-center mb-10 text-gray-800">
-        Appointments
-      </h1>
 
       {loading ? (
         <p className="text-center text-gray-500">Loading appointments...</p>
@@ -37,20 +35,33 @@ const AdminAppointment = () => {
               key={appointment._id}
               className="bg-white border border-gray-300 rounded-lg p-5 shadow hover:shadow-md transition duration-300"
             >
-              <h2 className="text-xl font-semibold text-indigo-700 mb-2">
-                {appointment.category || "Appointment"}
-              </h2>
+              <h2 className="text-xl font-semibold text-indigo-700 mb-4">Appointment Details</h2>
               <p className="text-gray-700 mb-1">
-                <strong>Name:</strong> {appointment.name}
+                <strong>Patient Name:</strong> {appointment.name || "N/A"}
               </p>
               <p className="text-gray-700 mb-1">
-                <strong>Email:</strong> {appointment.email}
+                <strong>Email:</strong> {appointment.email || "N/A"}
               </p>
               <p className="text-gray-700 mb-1">
-                <strong>Date:</strong> {new Date(appointment.date).toLocaleDateString()}
+                <strong>Phone:</strong> {appointment.phone || "N/A"}
               </p>
-              <p className="text-gray-700">
-                <strong>Message:</strong> {appointment.message}
+              <p className="text-gray-700 mb-1">
+                <strong>Branch:</strong> {appointment.branch || "N/A"}
+              </p>
+              <p className="text-gray-700 mb-1">
+                <strong>Date:</strong> {appointment.selectedDate || "N/A"}
+              </p>
+              <p className="text-gray-700 mb-1">
+                <strong>Time:</strong> {appointment.selectedTime || "N/A"}
+              </p>
+              <p className="text-gray-700 mb-1">
+                <strong>Fee:</strong> {appointment.fee ? `${appointment.fee} Taka` : "N/A"}
+              </p>
+              <p className="text-gray-700 mb-1">
+                <strong>Issue:</strong> {appointment.remarks || "Not Provided"}
+              </p>
+              <p className="text-gray-700 mb-1">
+                <strong>Status:</strong> {appointment.status || "N/A"}
               </p>
             </div>
           ))}

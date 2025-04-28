@@ -205,10 +205,13 @@ app.post("/registration", documentsFields, async (req, res) => {
 });
 
 
-
 //app.use('/api/selftest', selfTestRoutes);
 
 app.use('/api/appointments', appointmentRoutes);
+
+
+
+
 
 //user login
 app.post("/login", async (req, res) => {
@@ -235,13 +238,13 @@ app.post("/login", async (req, res) => {
 const userRoutes = require("./routes/userRoutes");
 app.use("/users", userRoutes);
 
-
+app.use("/consultants", consultantRoutes);
 
 
 
 // === Mount All Other Routes ===
 app.use("/consultant", consultantRoutes);
-app.use("/selftest", selfTestRoutes);
+// app.use("/selftest", selfTestRoutes);
 
 // === Start Server ===
 
