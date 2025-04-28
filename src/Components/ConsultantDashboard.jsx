@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Pencil, LogOut } from 'lucide-react';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
+
 
 const ConsultantDashboard = () => {
   const [consultant, setConsultant] = useState(null);
@@ -10,19 +13,25 @@ const ConsultantDashboard = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
+  const { id } = useParams(); // Assuming consultant id comes from URL like /dashboard/:id
+  const [appointments, setAppointments] = useState([]);
 
   const email = localStorage.getItem("userEmail");
 
   const fetchAppointments = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/consultant/appointments?email=${encodeURIComponent(email)}`);
+      setLoading(true);
+      const res = await fetch(`http://localhost:5000/consultant/appointments/${consultant._id}`);
       if (!res.ok) throw new Error('Failed to fetch appointments');
       const data = await res.json();
       setConsultant(prev => ({ ...prev, appointments: data }));
     } catch (err) {
       setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
+  
 
   useEffect(() => {
     if (activeTab === 'appointments') {
@@ -226,14 +235,24 @@ const ConsultantDashboard = () => {
     <div>
       {consultant.appointments?.length > 0 ? (
         <ul className="space-y-3">
-          {consultant.appointments.map((appt) => (
-            <li key={appt._id} className="border p-4 rounded-md shadow-sm">
-              <p><strong>Patient:</strong> {appt.patientName}</p>
-              <p><strong>Date:</strong> {appt.date} at {appt.time}</p>
-              <p><strong>Issue:</strong> {appt.issue}</p>
-              <p><strong>Status:</strong> {appt.status}</p>
-            </li>
-          ))}
+          {consultant.appointments
+  ?.filter(app => app.status === 'pending')  // pending appointments
+  .map((appointment) => (
+    <div key={appointment._id} style={{ border: '1px solid #ddd', borderRadius: '8px', padding: '15px', marginBottom: '10px' }}>
+      <p><b>Patient:</b> {appointment.name}</p>
+      <p><b>Email:</b> {appointment.email}</p>
+      <p><b>Phone:</b> {appointment.phone}</p>
+      <p><b>Branch:</b> {appointment.branch}</p>
+      <p><b>Date:</b> {appointment.selectedDate} at {appointment.selectedTime}</p>
+      <p><b>Fee:</b> {appointment.fee} Taka</p>
+      <p><b>Issue:</b> {appointment.remarks || "Not Provided"}</p>
+      <p><b>Status:</b> pending</p>
+      <div style={{ marginTop: '10px' }}>
+        <button onClick={() => handleAccept(appointment._id)} style={{ marginRight: '10px', backgroundColor: 'green', color: 'white', padding: '5px 10px', borderRadius: '5px' }}>Accept</button>
+        <button onClick={() => handleReject(appointment._id)} style={{ backgroundColor: 'red', color: 'white', padding: '5px 10px', borderRadius: '5px' }}>Reject</button>
+      </div>
+    </div>
+))}
         </ul>
       ) : (
         <p>No appointment requests right now.</p>
@@ -241,26 +260,59 @@ const ConsultantDashboard = () => {
     </div>
   );
 
+  const handleAccept = async (appointmentId) => {
+    try {
+      const res = await fetch(`http://localhost:5000/consultant/appointments/accept/${appointmentId}`, {
+        method: 'PATCH',
+      });
+      if (res.ok) {
+        window.alert('Accepted Successfully!');
+        fetchAppointments(); // Refresh the list
+      }
+    } catch (error) {
+      console.error('Error accepting appointment', error);
+    }
+  };
+  
+  const handleReject = async (appointmentId) => {
+    try {
+      const res = await fetch(`http://localhost:5000/consultant/appointments/reject/${appointmentId}`, {
+        method: 'PATCH',
+      });
+      if (res.ok) {
+        window.alert('Rejected Successfully!');
+        fetchAppointments(); // Refresh the list
+      }
+    } catch (error) {
+      console.error('Error rejecting appointment', error);
+    }
+  };
+  
+  
   const renderPatientHistory = () => (
     <div>
-      {consultant.pastPatients?.length > 0 ? (
+      {consultant.appointments?.filter(app => app.status === 'accepted')?.length > 0 ? (
         <ul className="space-y-3">
-          {consultant.pastPatients.map((session, index) => (
-            <li key={index} className="border p-4 rounded-md shadow-sm">
-              <p><strong>Patient:</strong> {session.name}</p>
-              <p><strong>Date:</strong> {session.date}</p>
-              <p><strong>Time:</strong> {session.time}</p>
-              <p><strong>Issue:</strong> {session.issue}</p>
-              <p><strong>Solution:</strong> {session.solution}</p>
-              <p><strong>Sessions:</strong> {session.totalAppointments} times</p>
-            </li>
-          ))}
+          {consultant.appointments
+            .filter(app => app.status === 'accepted')
+            .map((appointment) => (
+              <div key={appointment._id} style={{ border: '1px solid #ddd', borderRadius: '8px', padding: '15px', marginBottom: '10px' }}>
+                <p><b>Patient:</b> {appointment.name}</p>
+                <p><b>Email:</b> {appointment.email}</p>
+                <p><b>Phone:</b> {appointment.phone}</p>
+                <p><b>Branch:</b> {appointment.branch}</p>
+                <p><b>Date:</b> {appointment.selectedDate} at {appointment.selectedTime}</p>
+                <p><b>Fee:</b> {appointment.fee} Taka</p>
+                <p><b>Issue:</b> {appointment.remarks || "Not Provided"}</p>
+              </div>
+            ))}
         </ul>
       ) : (
         <p>No previous patient history available.</p>
       )}
     </div>
   );
+  
 
   const handleLogout = () => {
     localStorage.clear();
