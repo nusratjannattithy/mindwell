@@ -2,11 +2,9 @@ const express = require("express");
 const cors = require("cors");
 const multer = require("multer");
 const bcrypt = require("bcrypt");
-
 const path = require("path");
 const dotenv = require("dotenv");
 const mongoose = require('mongoose');
-
 const { connectDB, getDB } = require("./db");
 const Feedback = require("./Schema/Feedback");
 const MoodTracking = require("./models/moodTracking");
@@ -18,11 +16,7 @@ const { Collection } = require("mongodb");
 dotenv.config();
 console.log("MONGODB_URI:", process.env.MONGODB_URI);
 
-const { connectDB, getDB } = require("./db");
 const User = require("./models/registered");
-const Feedback = require("./Schema/Feedback");
-const MoodTracking = require("./models/moodTracking");
-const selfTestRoutes = require("./routes/selftest");
 const consultantRoutes = require("./routes/consultantRoutes");
 
 const therapistRoutes = require('./therapistRoutes');  // Import therapist routes

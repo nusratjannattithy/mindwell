@@ -13,6 +13,23 @@ const ConsultantDashboard = () => {
 
   const email = localStorage.getItem("userEmail");
 
+  const fetchAppointments = async () => {
+    try {
+      const res = await fetch(`http://localhost:5000/consultant/appointments?email=${encodeURIComponent(email)}`);
+      if (!res.ok) throw new Error('Failed to fetch appointments');
+      const data = await res.json();
+      setConsultant(prev => ({ ...prev, appointments: data }));
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === 'appointments') {
+      fetchAppointments();
+    }
+  }, [activeTab]);
+
   useEffect(() => {
     if (!email) {
       setError("No consultant email found. Please log in again.");
@@ -93,8 +110,8 @@ const ConsultantDashboard = () => {
     const profileImage = previewPhoto || consultant.documents?.profilePhoto || '/default-avatar.png';
 
     return (
-      <div className="max-w-5xl mx-auto mt-10 p-8 bg-white shadow-xl rounded-xl">
-        <div className="flex flex-col md:flex-row items-center gap-8">
+      <div className="max-w-5xl mx-auto mt-0 p-12 bg-white shadow-xl rounded-xl">
+        <div className="flex flex-col md:flex-row items-center gap-0">
           <div className="flex-shrink-0">
             <img
               src={profileImage}
@@ -254,33 +271,41 @@ const ConsultantDashboard = () => {
   if (error) return <div className="text-center mt-20 text-red-600">{error}</div>;
 
   return (
-    <div className="max-w-5xl mx-auto p-6">
+    <div className="max-w-7xl mx-auto p-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-blue-700">Consultant Dashboard</h1>
-        <button onClick={handleLogout} className="text-sm flex items-center gap-2 text-red-600 hover:text-red-800">
-          <LogOut size={18} /> Logout
-        </button>
+        
       </div>
 
-      <div className="flex justify-center mb-6 space-x-4">
-        <button onClick={() => setActiveTab('profile')} className={`px-4 py-2 font-semibold rounded ${activeTab === 'profile' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-800'}`}>
-          Profile
-        </button>
-        <button onClick={() => setActiveTab('update')} className={`px-4 py-2 font-semibold rounded ${activeTab === 'update' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-800'}`}>
-          Update Info
-        </button>
-        <button onClick={() => setActiveTab('appointments')} className={`px-4 py-2 font-semibold rounded ${activeTab === 'appointments' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-800'}`}>
-          Manage Appointments
-        </button>
-        <button onClick={() => setActiveTab('history')} className={`px-4 py-2 font-semibold rounded ${activeTab === 'history' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-800'}`}>
-          View Patient History
-        </button>
-      </div>
+      <div className="flex space-x-6">
+      {/* Sidebar */}
+        <div className="w-64 bg-white rounded-lg shadow-md p-4 space-y-4">
+          <button onClick={() => setActiveTab('profile')} className={`w-full text-left px-4 py-2 rounded ${activeTab === 'profile' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-800'}`}>
+            Profile
+          </button>
+          <button onClick={() => setActiveTab('update')} className={`w-full text-left px-4 py-2 rounded ${activeTab === 'update' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-800'}`}>
+            Update Info
+          </button>
+          <button onClick={() => setActiveTab('appointments')} className={`w-full text-left px-4 py-2 rounded ${activeTab === 'appointments' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-800'}`}>
+            Manage Appointments
+          </button>
+          <button onClick={() => setActiveTab('history')} className={`w-full text-left px-4 py-2 rounded ${activeTab === 'history' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-800'}`}>
+            View Patient History
+          </button>
+        <button onClick={handleLogout} className="w-full text-left px-4 py-2 rounded bg-gray-100 text-gray-800 hover:bg-blue-600 hover:text-white">
+            Logout
+          </button>
+        </div>
 
-      {activeTab === 'profile' && renderProfile()}
-      {activeTab === 'update' && renderUpdateProfile()}
-      {activeTab === 'appointments' && renderAppointments()}
-      {activeTab === 'history' && renderPatientHistory()}
+
+        {/* Main Content */}
+        <div className="flex-1 ml-6">
+          {activeTab === 'profile' && renderProfile()}
+          {activeTab === 'update' && renderUpdateProfile()}
+          {activeTab === 'appointments' && renderAppointments()}
+          {activeTab === 'history' && renderPatientHistory()}
+        </div>
+      </div>
     </div>
   );
 };
