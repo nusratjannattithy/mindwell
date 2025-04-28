@@ -41,14 +41,17 @@ router.put('/profile', async (req, res) => {
 });
 
 // ✅ GET Appointments for the Consultant
+// Fetch appointments for a consultant by consultant ID
 router.get('/appointments/:consultantId', async (req, res) => {
   try {
     const { consultantId } = req.params;
 
-    const appointments = await Appointment.find({ consultantId });
+    const appointments = await Appointment.find({ consultantId }); // consultantId field in Appointment Schema
+
     res.json(appointments);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error fetching appointments:', error.message);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
@@ -71,6 +74,31 @@ router.patch('/appointment/:id', async (req, res) => {
     res.status(500).json({ message: "Failed to update appointment" });
   }
 });
+
+// Accept an appointment
+router.patch('/appointments/accept/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Appointment.findByIdAndUpdate(id, { status: 'accepted' });
+    res.json({ message: 'Appointment accepted' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to accept appointment' });
+  }
+});
+
+// Reject an appointment
+router.patch('/appointments/reject/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Appointment.findByIdAndUpdate(id, { status: 'rejected' });
+    res.json({ message: 'Appointment rejected' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to reject appointment' });
+  }
+});
+
 
 // ✅ Upload Profile Photo (using multer)
 const storage = multer.diskStorage({
