@@ -1,7 +1,5 @@
-/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import Heading from './Heading';
-
 
 const Registration = () => {
   const [userType, setUserType] = useState('');
@@ -27,6 +25,7 @@ const Registration = () => {
   });
 
   const [error, setError] = useState('');
+  const [termsAccepted, setTermsAccepted] = useState(false);  // State to track terms and condition checkbox
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -51,15 +50,22 @@ const Registration = () => {
     } else if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match.");
       return;
+    } else if (!termsAccepted) {
+      setError("You must accept the terms and conditions.");
+      return;
     }
+
     setError("");
     console.log("Registering:", { userType, ...formData });
 
     const form = new FormData();
     form.append("userType", userType);
     for (const key in formData) {
-      form.append(key, formData[key]);
+      if (key !== "documents") {
+        form.append(key, formData[key]);
+      }
     }
+
     for (const key in formData.documents) {
       if (formData.documents[key]) {
         form.append(key, formData.documents[key]);
@@ -83,7 +89,6 @@ const Registration = () => {
   // Patient Fields 
   const renderPatientFields = () => (
     <>
-   
       <div>
         <label className="block text-sm font-semibold text-gray-700">Phone Number</label>
         <input
@@ -166,11 +171,11 @@ const Registration = () => {
       </div>
 
       {/* Document Upload Fields */}
-      {[
+      {[ 
         { label: 'Educational Certificates', name: 'educationalCertificates' },
         { label: 'Professional Resume / CV', name: 'resume' },
         { label: 'Government-issued ID', name: 'governmentID' },
-        { label: 'Consent to Platform Policies', name: 'consentForm' },
+        { label: 'Experience Certificate', name: 'consentForm' },
         { label: 'Specialization Certificates', name: 'specializationCertificates' },
         { label: 'Profile Photo', name: 'profilePhoto' },
       ].map((doc) => (
@@ -190,97 +195,118 @@ const Registration = () => {
 
   return (
     <>
-     <Heading Headline={"Let's Start Your Mental Health Journey with MindWell"} pagename={"Registration"}/>
-     <div className="flex flex-col min-h-screen">
-      <div className="flex-1 flex items-center justify-center bg-blue-100">
-        {!userType ? (
-          <div className="bg-white p-10 rounded-lg shadow-xl text-center max-w-md w-full">
-            <h2 className="text-3xl font-bold text-blue-700">Register as</h2>
-            <p className="text-gray-600 mt-2 mb-6">Please select your role to continue</p>
-            <div className="flex gap-4 justify-center">
-              <button
-                onClick={() => setUserType('patient')}
-                className="w-1/2 py-3 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition"
-              >
-                Patient
-              </button>
-              <button
-                onClick={() => setUserType('therapist')}
-                className="w-1/2 py-3 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition"
-              >
-                Consultant
-              </button>
+      <Heading Headline={"Let's Start Your Mental Health Journey with MindWell"} pagename={"Registration"}/>
+      <div className="flex flex-col min-h-screen">
+        <div className="flex-1 flex items-center justify-center bg-blue-100">
+          {!userType ? (
+            <div className="bg-white p-10 rounded-lg shadow-xl text-center max-w-md w-full">
+              <h2 className="text-3xl font-bold text-blue-700">Register as</h2>
+              <p className="text-gray-600 mt-2 mb-6">Please select your role to continue</p>
+              <div className="flex gap-4 justify-center">
+                <button
+                  onClick={() => setUserType('patient')}
+                  className="w-1/2 py-3 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition"
+                >
+                  Patient
+                </button>
+                <button
+                  onClick={() => setUserType('therapist')}
+                  className="w-1/2 py-3 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition"
+                >
+                  Consultant
+                </button>
+              </div>
             </div>
-          </div>
-        ) : (
-          <div className="w-full max-w-5xl p-8 bg-white shadow-2xl rounded-lg">
-            <h2 className="text-4xl font-bold text-blue-700 text-center mb-6">
-              {userType === 'patient' ? 'Patient Registration' : 'Therapist Registration'}
-            </h2>
-            {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+          ) : (
+            <div className="w-full max-w-5xl p-8 bg-white shadow-2xl rounded-lg">
+              <h2 className="text-4xl font-bold text-blue-700 text-center mb-6">
+                {userType === 'patient' ? 'Patient Registration' : 'Therapist Registration'}
+              </h2>
+              {error && <p className="text-red-500 text-center mb-4">{error}</p>}
 
-            <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Common Fields */}
-              <div>
-                <label className="block text-sm font-semibold text-gray-700">Full Name</label>
-                <input
-                  type="text"
-                  name="fullName"
-                  value={formData.fullName}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full mt-1 p-3 border border-gray-300 rounded-lg"
-                />
-              </div>
+              <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Common Fields */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700">Full Name</label>
+                  <input
+                    type="text"
+                    name="fullName"
+                    value={formData.fullName}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full mt-1 p-3 border border-gray-300 rounded-lg"
+                  />
+                </div>
 
-              <div>
-                <label className="block text-sm font-semibold text-gray-700">Email</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full mt-1 p-3 border border-gray-300 rounded-lg"
-                />
-              </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700">Email</label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full mt-1 p-3 border border-gray-300 rounded-lg"
+                  />
+                </div>
 
-              <div>
-                <label className="block text-sm font-semibold text-gray-700">Password</label>
-                <input
-                  type="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full mt-1 p-3 border border-gray-300 rounded-lg"
-                />
-              </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700">Password</label>
+                  <input
+                    type="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full mt-1 p-3 border border-gray-300 rounded-lg"
+                  />
+                </div>
 
-              <div>
-                <label className="block text-sm font-semibold text-gray-700">Confirm Password</label>
-                <input
-                  type="password"
-                  name="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full mt-1 p-3 border border-gray-300 rounded-lg"
-                />
-              </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700">Confirm Password</label>
+                  <input
+                    type="password"
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full mt-1 p-3 border border-gray-300 rounded-lg"
+                  />
+                </div>
 
-              {userType === 'patient' ? renderPatientFields() : renderPsychologistFields()}
+                {userType === 'patient' ? renderPatientFields() : renderPsychologistFields()}
 
-              <div className="col-span-2 text-center">
-                <button type="submit" className="py-3 px-8 bg-blue-500 text-white rounded-lg">Create Account</button>
-              </div>
-            </form>
-          </div>
-        )}
+                {/* Dummy Paragraph */}
+                <div className="col-span-2 mb-4">
+                  <p className="text-gray-600 text-sm">
+                    {/* eslint-disable no-unused-vars */} Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus impedit corrupti rem nostrum rerum accusamus eveniet a. Velit, voluptatibus. Quidem tempora corporis nesciunt sed saepe, earum repellat quas eos aut tempore magni at fugiat! Natus debitis ullam esse autem eum iusto, beatae expedita ipsa quisquam ab eaque sint, et culpa.
+                  </p>
+                </div>
+                <div className="col-span-1">
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id="terms"
+                      checked={termsAccepted}
+                      onChange={() => setTermsAccepted(!termsAccepted)}
+                      className="mr-2"
+                    />
+                    <label htmlFor="terms" className="text-sm text-gray-600">
+                      I agree to the <span className="text-blue-600">Terms and Conditions</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div className="col-span-2 text-center">
+                  <button type="submit" className="py-3 px-8 bg-blue-500 text-white rounded-lg" disabled={!termsAccepted}>
+                    Create Account
+                  </button>
+                </div>
+              </form>
+            </div>
+          )}
+        </div>
       </div>
-    
-    </div>
-  
     </>
   );
 };

@@ -66,7 +66,12 @@ const SelfTest = () => {
     setLoading(true);
     setError(null);
     try {
+      const storedUser = localStorage.getItem('patientUser');
+      const user = storedUser ? JSON.parse(storedUser) : null;
+      const userId = user?._id || user?.id;
+
       const response = await axios.post('/api/selftest', {
+        userId,
         testType,
         answers,
       });

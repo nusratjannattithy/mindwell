@@ -25,12 +25,15 @@ import ActivitySection from './Components/ActivitySection';
 import HistorySection from './Components/HistorySection';
 import ProfileSettings from './Components/ProfileSettings';
 import ConsultantProfile from './Components/ConsultantProfile';
-import AdminDashboard from './Components/AdminDashboard';
 import Admin from './Pages/Admin';
 import ConsultantDashboard from './Components/ConsultantDashboard';
-
-
-
+import SelfAssessmentSection from './Components/SelfAssessmentSection';
+import MoodHistorySection from './Components/MoodHistorySection';
+import SessionNotesSection from './Components/SessionNotesSection';
+import AppointmentsSection from './Components/AppointmentsSection';
+import DashboardTabs from './Components/DashboardTabs';
+import ProfileSection from './Components/ProfileSection';
+import SectionNavigation from './Components/SectionNavigation';
 
 function App() {
   return (
@@ -56,22 +59,28 @@ function App() {
         <Route path="/blog/:id" element={<BlogDetail />} />
         <Route path="/Articles" element={<Articles />} />
         <Route path="/Books" element={<Books />} />
-        <Route path="/dashboard" element={<PatientDashboard />} />
         <Route path="/Consultdashboard" element={<ConsultantDashboard/>} />
         <Route path="/Books" element={<Books />} /> 
         <Route path="/Feedback" element={<Feedback />} />
         <Route path="/" element={<Home />} />
-        <Route path="/AboutUs" element={<AboutUs />} />        <Route path="/AppointmentForm" element={<AppointmentForm />} />
+        <Route path="/AboutUs" element={<AboutUs />} />   
+        <Route path="/AppointmentForm" element={<AppointmentForm />} />
         <Route path="/ActivitySection" element={<ActivitySection />} />
         <Route path="/HistorySection" element={<HistorySection />} />
         <Route path="/ProfileSettings" element={<ProfileSettings />} />
         <Route path="/consultant/:id" element={<ConsultantProfile />} />
         <Route path="/Admin" element ={<Admin/>}/>
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route path="/PatientDashboard" element={<PatientDashboard/>}/>
+        <Route path="/dashboard" element={<PatientDashboard/>}/>
+        <Route path="/SelfAssessmentSection" element={<SelfAssessmentSection/>}/>
+        <Route path="/MoodHistorySection" element={<MoodHistorySection/>}/>
+        <Route path="/SessionNotesSection" element={<SessionNotesSection/>}/>
+        <Route path="/AppointmentsSection" element={<AppointmentsSection/>}/>
+        <Route path="/DashboardTabs" element={<DashboardTabs/>}/>
+        <Route path="/ProfileSection" element={<ProfileSection/>}/>
+        <Route path="/SectionNavigation" element={<SectionNavigation/>}/>
         
-        
-       
-        
+     
       </Routes>
 
       {/* Footer is displayed on all pages */}

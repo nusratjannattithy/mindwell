@@ -9,7 +9,11 @@ const therapistSchema = new mongoose.Schema({
   userType: { type: String, required: true },
   documents: {
     profilePhoto: { type: String, default: "" }
-  }
+  },
+  specializations: [{ type: String }],
+  certificates: [{ type: String }],
+  educationalCertificates: [{ type: String }],
+  specializationCertificates: [{ type: String }]
 });
 
 module.exports = mongoose.model('Therapist', therapistSchema);

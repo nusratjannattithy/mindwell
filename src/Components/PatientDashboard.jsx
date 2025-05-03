@@ -1,223 +1,167 @@
-/* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react';
-import MoodTracking from './MoodTracking';
-import BookAppointment from './BookAppointment';
-
+import { useState, useEffect } from 'react';
+import SectionNavigation from './SectionNavigation';
+import ProfileSection from './ProfileSection';
+import AppointmentsSection from './AppointmentsSection';
+import MoodHistorySection from './MoodHistorySection';
+import SessionNotesSection from './SessionNotesSection';
+import SelfAssessmentSection from './SelfAssessmentSection'; // Renamed
+import AppointmentForm from './AppointmentForm';
 
 const PatientDashboard = () => {
-  const [patientData, setPatientData] = useState({
-    name: 'John Doe',
-    upcomingAppointments: [], // Appointments are stored here
-    moodHistory: [],
-  });
+  const [activeSection, setActiveSection] = useState('profile');
+  const [patientData, setPatientData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [showAppointmentForm, setShowAppointmentForm] = useState(false);
 
+  const [appointments, setAppointments] = useState([]);
 
-  // Fetch appointments from backend API on component mount
   useEffect(() => {
-    const fetchAppointments = async () => {
+    const fetchPatientData = async () => {
+      setLoading(true);
+      setError(null);
       try {
-        // For demo, using fixed userId; replace with actual user ID or auth context
-        const userId = "64a7f0c2b1e4f2a1b2c3d4e5";
-        const response = await fetch(`/api/appointments/${userId}`);
-        if (!response.ok) {
-          console.error('Failed to fetch appointments');
+        const storedUser = localStorage.getItem('patientUser');
+        console.log('Stored user from localStorage:', storedUser);
+        if (!storedUser) {
+          setError('No patient user found in local storage.');
+          setLoading(false);
           return;
         }
-        const appointments = await response.json();
-        setPatientData(prev => ({
-          ...prev,
-          upcomingAppointments: appointments,
-        }));
-      } catch (error) {
-        console.error('Error fetching appointments:', error);
+        const user = JSON.parse(storedUser);
+        console.log('Parsed user object:', user);
+        const userId = user._id || user.id; // depending on backend id field
+        console.log('User ID:', userId);
+
+        if (!userId) {
+          setError('User ID not found.');
+          setLoading(false);
+          return;
+        }
+
+        const response = await fetch(`http://localhost:5000/users/${userId}`);
+        console.log('Fetch response status:', response.status);
+        if (!response.ok) {
+          throw new Error('Failed to fetch patient data');
+        }
+        const data = await response.json();
+        console.log('Fetched patient data:', data);
+        if (data.success && data.user) {
+          setPatientData(data.user);
+          // Fetch appointments after patient data is loaded
+          fetchAppointments(data.user.email);
+        } else {
+          setError('Failed to load patient data');
+        }
+      } catch (err) {
+        console.error('Error in fetchPatientData:', err);
+        setError(err.message || 'An error occurred');
+      } finally {
+        setLoading(false);
       }
     };
 
+    const fetchAppointments = async (email) => {
+      try {
+        const response = await fetch(`http://localhost:5000/api/appointments/${email}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch appointments');
+        }
+        const data = await response.json();
+        if (data.success && data.appointments) {
+          // Include branch and type fields from backend data
+          const mappedAppointments = data.appointments.map((appt) => ({
+            ...appt,
+            therapist: appt.consultantId || 'Unknown',
+            date: appt.selectedDate,
+            time: appt.selectedTime,
+            sessionNotes: appt.remarks || '',
+            branch: appt.branch || 'N/A',
+            type: appt.type || 'N/A',
+          }));
+          setAppointments(mappedAppointments);
+        } else {
+          setAppointments([]);
+        }
+      } catch (err) {
+        console.error('Error fetching appointments:', err);
+        setAppointments([]);
+      }
+    };
 
-    fetchAppointments();
+    fetchPatientData();
   }, []);
 
-
-  // Remove localStorage usage for appointments
-
-
-  const handleAddAppointment = (appointment) => {
-    setPatientData(prev => ({
-      ...prev,
-      upcomingAppointments: [...prev.upcomingAppointments, { ...appointment, sessionNotes: '', sessionNoteDate: null }]
-    }));
+  const handleDeleteAppointment = (index) => {
+    setAppointments((prev) => prev.filter((_, i) => i !== index));
   };
 
+  const handleAddAppointment = (newAppointment) => {
+    setAppointments((prev) => [...prev, newAppointment]);
+  };
 
-  const handleDeleteAppointment = async (index) => {
-    const appointmentToDelete = patientData.upcomingAppointments[index];
-    if (!appointmentToDelete || !appointmentToDelete._id) {
-      console.error('Invalid appointment to delete');
-      return;
+  const handleNoteChange = (index, newNotes) => {
+    setAppointments((prev) =>
+      prev.map((appt, i) => (i === index ? { ...appt, sessionNotes: newNotes } : appt))
+    );
+  };
+
+  const renderSection = () => {
+    if (showAppointmentForm) {
+      return <AppointmentForm />;
     }
-    try {
-      const response = await fetch(`/api/appointments/${appointmentToDelete._id}`, {
-        method: 'DELETE',
-      });
-      if (!response.ok) {
-        console.error('Failed to delete appointment');
-        return;
-      }
-      setPatientData(prev => {
-        const newAppointments = [...prev.upcomingAppointments];
-        newAppointments.splice(index, 1);
-        return {
-          ...prev,
-          upcomingAppointments: newAppointments
-        };
-      });
-    } catch (error) {
-      console.error('Error deleting appointment:', error);
+    switch (activeSection) {
+      case 'profile':
+        if (loading) {
+          return <p>Loading patient data...</p>;
+        }
+        if (error) {
+          return <p className="text-red-500">Error: {error}</p>;
+        }
+        if (patientData) {
+          return <ProfileSection patientData={patientData} />;
+        }
+        return <p>No patient data available.</p>;
+      case 'appointments':
+        return (
+          <AppointmentsSection
+            appointments={appointments}
+            onDelete={handleDeleteAppointment}
+            onAdd={handleAddAppointment}
+            onNoteChange={handleNoteChange}
+          />
+        );
+      case 'moodHistory':
+        return <MoodHistorySection />;
+      case 'sessionNotes':
+        return <SessionNotesSection patientEmail={patientData?.email} />;
+      case 'selfAssessment':
+        return <SelfAssessmentSection />;
+      default:
+        return <ProfileSection patientData={patientData} />;
     }
   };
-
-
-  // --- Function to handle session note changes ---
-  const handleSessionNoteChange = (index, note) => {
-    setPatientData(prev => {
-      const newAppointments = [...prev.upcomingAppointments];
-      // Update the specific appointment object at the given index
-      newAppointments[index] = {
-        ...newAppointments[index],
-        sessionNotes: note, // Set the sessionNotes property
-        sessionNoteDate: new Date().toISOString() // Add/update the timestamp
-      };
-      return {
-        ...prev,
-        upcomingAppointments: newAppointments // Update the appointments array in the state
-      };
-    });
-  };
-
-
-  const handleMoodUpdate = (moodData) => {
-    setPatientData(prev => ({
-      ...prev,
-      moodHistory: [...prev.moodHistory, moodData]
-    }));
-  };
-
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-6xl mx-auto">
-        {/* Username Display */}
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-blue-600">{patientData.name}</h1>
-        </div>
+    <div className="flex min-h-screen bg-gray-100">
+      {/* Sidebar Navigation */}
+      <SectionNavigation activeSection={activeSection} setActiveSection={setActiveSection} />
 
-
-        {/* Appointments Section */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-          <h2 className="text-xl font-semibold text-blue-600 mb-4">Your Appointments</h2>
-          {/* --- Check if there are any appointments --- */}
-          {patientData.upcomingAppointments.length > 0 ? (
-            <div className="space-y-4">
-              {/* --- Map over each appointment --- */}
-              {patientData.upcomingAppointments.map((appt, index) => (
-                <div key={appt._id || index} className="border-b pb-4 flex flex-col space-y-2">
-                  {/* Appointment Details */}
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <p className="font-semibold">With: {appt.therapist}</p>
-                      <p>Date: {appt.date}</p>
-                      <p>Time: {appt.time}</p>
-                    </div>
-                    <button
-                      onClick={() => handleDeleteAppointment(index)}
-                      className="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600"
-                    >
-                      Delete
-                    </button>
-                  </div>
-
-
-                  {/* --- Session Notes Section for THIS appointment --- */}
-                  <div>
-                    {/* --- Label for Session Notes --- */}
-                    <label htmlFor={`sessionNote-${index}`} className="block font-semibold mb-1">
-                      Session Notes:
-                    </label>
-                    {/* --- Textarea for entering/displaying notes --- */}
-                    <textarea
-                      id={`sessionNote-${index}`}
-                      // Display existing notes or an empty string if none exist yet
-                      value={appt.sessionNotes || ''}
-                      // Call the handler function when the text changes
-                      onChange={(e) => handleSessionNoteChange(index, e.target.value)}
-                      rows={3}
-                      className="w-full border rounded p-2"
-                      placeholder="Enter session notes here..."
-                    />
-                    {/* --- Display timestamp if notes have been saved --- */}
-                    {appt.sessionNoteDate && (
-                      <p className="text-sm text-gray-500 mt-1">
-                        Last updated: {new Date(appt.sessionNoteDate).toLocaleString()}
-                      </p>
-                    )}
-                  </div>
-                  {/* --- End of Session Notes Section --- */}
-
-
-                </div>
-              ))}
-            </div>
-          ) : (
-            // --- Message shown if there are NO appointments ---
-            <p className="text-gray-500">No upcoming appointments</p>
-          )}
-        </div>
-
-
-        {/* Mood Tracking Section */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-          <h2 className="text-xl font-semibold text-blue-600 mb-4">Mood Tracking</h2>
-          <MoodTracking onMoodUpdate={handleMoodUpdate} />
-          {patientData.moodHistory.length > 0 && (
-            <div className="mt-6">
-              <h3 className="text-lg font-semibold mb-2">Your Mood History</h3>
-              <div className="flex space-x-2 overflow-x-auto py-2">
-                {patientData.moodHistory.map((mood, index) => (
-                  <div
-                    key={index}
-                    className="flex flex-col items-center"
-                    style={{ minWidth: '60px' }}
-                  >
-                    <div
-                      className={`w-10 h-10 rounded-full flex items-center justify-center text-white
-                        ${mood.value > 7 ? 'bg-green-500' :
-                          mood.value > 4 ? 'bg-yellow-500' : 'bg-red-500'}`}
-                    >
-                      {mood.value}
-                    </div>
-                    <span className="text-xs mt-1">{new Date(mood.date).toLocaleDateString()}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-
-
-        {/* Book Appointment Section */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-          <h2 className="text-xl font-semibold text-blue-600 mb-4">Book an Appointment</h2>
-          <BookAppointment onBook={handleAddAppointment} />
-        </div>
+      {/* Main Content Area */}
+      <div className="flex-1 p-6">
+        <h1 className="text-3xl font-semibold text-blue-600 mb-6 flex justify-between items-center">
+          Patient Dashboard
+          <button
+            onClick={() => setShowAppointmentForm(true)}
+            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
+          >
+            Book Now
+          </button>
+        </h1>
+        {renderSection()}
       </div>
     </div>
   );
 };
 
-
 export default PatientDashboard;
-
-
-
-
-

@@ -21,9 +21,9 @@ const calculateResult = (answers) => {
 router.post('/', async (req, res) => {
     try {
         console.log('Received self test submission:', req.body);
-        const { testType, answers } = req.body;
+        const { userId, testType, answers } = req.body;
 
-        if (!testType || !answers || !Array.isArray(answers)) {
+        if (!userId || !testType || !answers || !Array.isArray(answers)) {
             console.error('Invalid input data:', req.body);
             return res.status(400).json({ error: 'Invalid input data' });
         }
@@ -31,6 +31,7 @@ router.post('/', async (req, res) => {
         const result = calculateResult(answers);
 
         const selfTestResult = new SelfTestResult({
+            userId,
             testType,
             answers,
             result,
@@ -41,6 +42,21 @@ router.post('/', async (req, res) => {
         res.json({ result });
     } catch (error) {
         console.error('Error saving self test result:', error);
+        console.error(error.stack);
+        res.status(500).json({ error: error.message || 'Server error' });
+    }
+});
+
+router.get('/history/:userId', async (req, res) => {
+    try {
+        const { userId } = req.params;
+        if (!userId) {
+            return res.status(400).json({ error: 'User ID is required' });
+        }
+        const history = await SelfTestResult.find({ userId }).sort({ createdAt: -1 });
+        res.json({ success: true, history });
+    } catch (error) {
+        console.error('Error fetching self assessment history:', error);
         res.status(500).json({ error: error.message || 'Server error' });
     }
 });

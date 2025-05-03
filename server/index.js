@@ -1,29 +1,28 @@
 const express = require("express");
 const cors = require("cors");
 const multer = require("multer");
+const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
-
 const path = require("path");
 const dotenv = require("dotenv");
-const mongoose = require('mongoose');
-
-const { connectDB, getDB } = require("./db");
-const Feedback = require("./Schema/Feedback");
-const MoodTracking = require("./models/moodTracking");
-const selfTestRoutes = require("./routes/selftest");
-const { Collection } = require("mongodb");
 
 
-// Load environment variables from .env file
-dotenv.config();
-console.log("MONGODB_URI:", process.env.MONGODB_URI);
-
+require("dotenv").config(); // Load environment variables from .env file
 const { connectDB, getDB } = require("./db");
 const User = require("./models/registered");
+
+console.log("Loading environment variables...");
+dotenv.config(); // Load environment variables from .env file
+
+console.log("MONGODB_URI:", process.env.MONGODB_URI);
+
+
 const Feedback = require("./Schema/Feedback");
 const MoodTracking = require("./models/moodTracking");
 const selfTestRoutes = require("./routes/selftest");
 const consultantRoutes = require("./routes/consultantRoutes");
+const { Collection } = require("mongodb");
+const appointmentRoutes = require('./routes/appointments');  // Import appointment routes
 
 const therapistRoutes = require('./therapistRoutes');  // Import therapist routes
 
@@ -36,11 +35,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static("uploads"));
 
-// === File Upload Configuration ===
 // Use therapist routes under '/api'
 app.use('/api', therapistRoutes);
 
-// Set up multer for file handling
+// === Multer File Upload Config ===
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads/");
@@ -65,24 +63,21 @@ app.get("/", (req, res) => {
   res.send("MindWell API is running...");
 });
 
-// Helpline Message
+// Helpline Message Route
+const Helpline = mongoose.model("Helpline", new mongoose.Schema({
+  name: String,
+  email: String,
+  subject: String,
+  message: String,
+  createdAt: { type: Date, default: Date.now },
+}));
+
 app.post("/helpline", async (req, res) => {
   try {
     const { name, email, subject, message } = req.body;
-    const db = getDB();
-    const result = await db.collection("Helpline").insertOne({
-      name,
-      email,
-      subject,
-      message,
-      createdAt: new Date(),
-    });
-
-    if (result.insertedId) {
-      res.status(201).json({ success: true, message: "Your message has been sent successfully" });
-    } else {
-      throw new Error("Failed to insert message");
-    }
+    const newMessage = new Helpline({ name, email, subject, message });
+    await newMessage.save();
+    res.status(201).json({ success: true, message: "Your message has been sent successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -92,19 +87,9 @@ app.post("/helpline", async (req, res) => {
 app.post("/feedback", async (req, res) => {
   try {
     const { name, category, message } = req.body;
-    const db = getDB();
-    const result = await db.collection("Feedback").insertOne({
-      name,
-      category,
-      message,
-      createdAt: new Date(),
-    });
-
-    if (result.insertedId) {
-      res.status(201).json({ success: true, message: "Feedback submitted successfully" });
-    } else {
-      throw new Error("Failed to insert feedback");
-    }
+    const feedback = new Feedback({ name, category, message });
+    await feedback.save();
+    res.status(201).json({ success: true, message: "Feedback submitted successfully" });
   } catch (error) {
     console.error("Feedback submission error:", error);
     res.status(500).json({ success: false, message: error.message });
@@ -113,15 +98,13 @@ app.post("/feedback", async (req, res) => {
 
 app.get("/feedback", async (req, res) => {
   try {
-    const db = getDB();
-    const feedbackList = await db.collection("Feedback").find().toArray();
+    const feedbackList = await Feedback.find().sort({ createdAt: -1 });
     res.status(200).json({ success: true, feedback: feedbackList });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 });
 
-// Mood Tracking Routes
 app.post("/moodtracking", async (req, res) => {
   try {
     const { userId, mood, distraction, result } = req.body;
@@ -148,12 +131,9 @@ app.get("/moodtracking", async (req, res) => {
   }
 });
 
-// Registration Route with File Uploads and Password Hashing
+// Registration with File Uploads & Hashing
 app.post("/registration", documentsFields, async (req, res) => {
   try {
-    const db = getDB();
-    const usersCollection = db.collection("users");
-
     const formFields = req.body;
     const uploadedFiles = req.files;
     const fileBaseURL = `${process.env.BASE_URL}/uploads/`;
@@ -165,9 +145,29 @@ app.post("/registration", documentsFields, async (req, res) => {
       }
     }
 
-    // Hash the password before saving (✅ secure!)
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(formFields.password, salt);
+
+    // Validate gender field before saving
+    const validGenders = ['male', 'female', 'other'];
+    if (!validGenders.includes(formFields.gender)) {
+      delete formFields.gender;
+    }
+
+    // Validate phone presence only if userType is patient
+    if (formFields.userType === 'patient' && !formFields.phone) {
+      return res.status(400).json({ message: "Phone number is required for patient registration" });
+    }
+
+    // Normalize and validate userType
+    const validUserTypes = ['patient', 'therapist', 'admin'];
+    if (!formFields.userType) {
+      return res.status(400).json({ message: "User type is required" });
+    }
+    formFields.userType = formFields.userType.toLowerCase().trim();
+    if (!validUserTypes.includes(formFields.userType)) {
+      return res.status(400).json({ message: `Invalid user type. Allowed values: ${validUserTypes.join(', ')}` });
+    }
 
     const userData = {
       ...formFields,
@@ -175,19 +175,17 @@ app.post("/registration", documentsFields, async (req, res) => {
       documents: fileURLs,
     };
 
-    await usersCollection.insertOne(userData);
+    console.log("User Data:", userData); // Log user data to check
+
+    await User.create(userData);
     res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
     console.error("Registration Error:", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ message: `Internal Server Error: ${error.message}` });
   }
 });
 
-// Login Route
-app.use('/api/selftest', selfTestRoutes);
-
-//user login
-
+// Login
 app.post("/login", async (req, res) => {
   try {
     const { userType, email, password } = req.body;
@@ -208,11 +206,14 @@ app.post("/login", async (req, res) => {
     res.status(500).json({ message: "Internal server error", error: error.message });
   }
 });
+//Admin Components Routes 
+const userRoutes = require("./routes/userRoutes");
+app.use("/users", userRoutes);
 
-// === Mount All Other Routes ===
+// === Additional Routes ===
 app.use("/consultant", consultantRoutes);
-app.use("/selftest", selfTestRoutes); // Example additional routes
-
+app.use("/api/selftest", selfTestRoutes);
+app.use('/api/appointments', appointmentRoutes);
 // === Start Server ===
 const startServer = async () => {
   try {

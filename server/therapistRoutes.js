@@ -1,23 +1,20 @@
 const express = require('express');
 const router = express.Router();
-const User = require('./models/user');
+const User = require('./Schema/userSchema');  // Correct import from schema
 
-// Debug route for testing
+// Route to get all therapists
 router.get('/therapists', async (req, res) => {
   try {
-    console.log("Fetching therapists...");
     const therapists = await User.find({
       userType: { $regex: /^(psychologist|therapist)$/i }
     });
-    console.log("Therapists fetched successfully:", therapists);
     res.json(therapists);
   } catch (error) {
-    console.error("Error fetching therapists:", error);
     res.status(500).json({ message: "Failed to fetch therapists", error: error.message });
   }
 });
 
-// New route to get therapist by ID
+// Route to get therapist by ID
 router.get('/therapists/:id', async (req, res) => {
   try {
     const therapist = await User.findOne({
@@ -31,7 +28,6 @@ router.get('/therapists/:id', async (req, res) => {
 
     res.json(therapist);
   } catch (error) {
-    console.error("Error fetching therapist by ID:", error);
     res.status(500).json({ message: "Failed to fetch therapist", error: error.message });
   }
 });
